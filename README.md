@@ -1,0 +1,5 @@
+# perl-Alien-Build
+
+This package provides tools for building external (non-CPAN) dependencies
+for CPAN. It is mainly designed to be used at install time of a CPAN
+client, and work closely with Alien::Base which is used at run time.
