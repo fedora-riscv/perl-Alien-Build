@@ -37,6 +37,7 @@ BuildRequires:  perl(Env)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::CBuilder)
 BuildRequires:  perl(ExtUtils::ParseXS) >= 3.30
+BuildRequires:  perl(FFI::CheckLib)
 # FFI::Platypus is optional and not packaged
 BuildRequires:  perl(File::Basename)
 BuildRequires:  perl(File::BOM)
@@ -66,7 +67,6 @@ BuildRequires:  perl(YAML)
 # AnyEvent not used
 # AnyEvent::FTP::Server not used
 BuildRequires:  perl(File::Glob)
-BuildRequires:  perl(FFI::CheckLib)
 # Getopt::Long not used
 BuildRequires:  perl(HTTP::Tiny)
 # IO::Socket::INET not used
@@ -106,6 +106,7 @@ Requires:       perl(Config::INI::Reader::Multiline)
 Requires:       perl(DynaLoader)
 Requires:       perl(ExtUtils::CBuilder)
 Requires:       perl(ExtUtils::ParseXS) >= 3.30
+Requires:       perl(FFI::CheckLib)
 Requires:       perl(File::BOM)
 Requires:       perl(File::Find)
 Requires:       perl(Path::Tiny) >= 0.077
