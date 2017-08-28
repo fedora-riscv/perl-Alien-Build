@@ -5,7 +5,7 @@
 %global perl_bootstrap 1
 
 Name:           perl-Alien-Build
-Version:        0.99
+Version:        1.04
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
@@ -176,6 +176,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Aug 28 2017 Petr Pisar <ppisar@redhat.com> - 1.04-1
+- 1.04 bump
+
 * Fri Aug 18 2017 Petr Pisar <ppisar@redhat.com> - 0.99-1
 - 0.99 bump
 
