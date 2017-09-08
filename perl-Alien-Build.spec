@@ -5,12 +5,15 @@
 %global perl_bootstrap 1
 
 Name:           perl-Alien-Build
-Version:        1.05
+Version:        1.10
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Alien-Build/
 Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
+# Support only the most advanced pkgconfig implementation,
+# the files are deleted in prep section
+Patch0:         Alien-Build-1.10-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  perl-generators
@@ -20,7 +23,6 @@ BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
 BuildRequires:  perl(File::Which) >= 1.10
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
-BuildRequires:  sed
 # Run-time:
 %if !%{defined perl_bootstrap}
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -72,7 +74,6 @@ BuildRequires:  perl(YAML)
 # AnyEvent::FTP::Server not used
 BuildRequires:  perl(File::Glob)
 # Getopt::Long not used
-BuildRequires:  perl(HTTP::Tiny)
 # IO::Socket::INET not used
 BuildRequires:  perl(lib)
 BuildRequires:  perl(List::Util)
@@ -91,10 +92,12 @@ BuildRequires:  perl(Test2::V0) >= 0.000060
 # Break build cycle: Acme::Alien::DontPanic → Test::Alien
 # Acme::Alien::DontPanic not yet packaged
 %endif
-BuildRequires:  perl(Alien::Base::ModuleBuild)
-BuildRequires:  perl(Alien::Base::PkgConfig)
+BuildRequires:  perl(Alien::Base::ModuleBuild) >= 0.040
+BuildRequires:  perl(Alien::Base::PkgConfig) >= 0.040
+BuildRequires:  perl(Devel::Hide)
 BuildRequires:  perl(Env::ShellWords)
 # FFI::Platypus not packaged
+BuildRequires:  perl(HTTP::Tiny) >= 0.044
 # PkgConfig not packaged
 BuildRequires:  perl(Test::Exec)
 BuildRequires:  perl(URI::file)
@@ -148,15 +151,11 @@ client, and work closely with Alien::Base which is used at run time.
 %prep
 %setup -q -n Alien-Build-%{version}
 # Remove redundant pkgconfig implementations, keep
-# Alien::Build::Plugin::PkgConfig::LibPkgConf
+# Alien::Build::Plugin::PkgConfig::LibPkgConf,
+# MANIFEST is updated by Remove-redundant-pkgconfig-implementations.patch
+%patch0 -p1
 rm lib/Alien/Build/Plugin/PkgConfig/{CommandLine,PP}.pm 
-sed -i -r -e '\,lib/Alien/Build/Plugin/PkgConfig/(CommandLine|PP)\.pm,d' \
-    Makefile.PL MANIFEST
 rm t/alien_build_plugin_pkgconfig_{commandline,pp}.t
-sed -i -r -e '\,^t/alien_build_plugin_pkgconfig_(commandline|pp)\.t,d' \
-    MANIFEST
-sed -i -r -e '\,Alien::Build::Plugin::PkgConfig::(CommandLine|PP),d' \
-    t/01_use.t
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
@@ -176,6 +175,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Sep 08 2017 Petr Pisar <ppisar@redhat.com> - 1.10-1
+- 1.10 bump
+
 * Tue Aug 29 2017 Petr Pisar <ppisar@redhat.com> - 1.05-1
 - 1.05 bump
 
