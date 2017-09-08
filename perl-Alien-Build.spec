@@ -1,9 +1,6 @@
 # Run optional test
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
-# Remove after packaging Acme::Alien::DontPanic
-%global perl_bootstrap 1
-
 Name:           perl-Alien-Build
 Version:        1.10
 Release:        1%{?dist}
@@ -90,7 +87,7 @@ BuildRequires:  perl(Test2::V0) >= 0.000060
 # Optional tests:
 %if !%{defined perl_bootstrap}
 # Break build cycle: Acme::Alien::DontPanic → Test::Alien
-# Acme::Alien::DontPanic not yet packaged
+BuildRequires:  perl(Acme::Alien::DontPanic)
 %endif
 BuildRequires:  perl(Alien::Base::ModuleBuild) >= 0.040
 BuildRequires:  perl(Alien::Base::PkgConfig) >= 0.040
