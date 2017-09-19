@@ -2,7 +2,7 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.10
+Version:        1.16
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
@@ -96,6 +96,7 @@ BuildRequires:  perl(Env::ShellWords)
 # FFI::Platypus not packaged
 BuildRequires:  perl(HTTP::Tiny) >= 0.044
 # PkgConfig not packaged
+BuildRequires:  perl(Readonly) >= 1.60
 BuildRequires:  perl(Test::Exec)
 BuildRequires:  perl(URI::file)
 %endif
@@ -172,6 +173,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Sep 19 2017 Petr Pisar <ppisar@redhat.com> - 1.16-1
+- 1.16 bump
+
 * Fri Sep 08 2017 Petr Pisar <ppisar@redhat.com> - 1.10-1
 - 1.10 bump
 
