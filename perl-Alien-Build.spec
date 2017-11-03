@@ -2,7 +2,7 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.18
+Version:        1.28
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
@@ -10,7 +10,7 @@ URL:            http://search.cpan.org/dist/Alien-Build/
 Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.18-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-1.28-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  perl-generators
@@ -104,6 +104,7 @@ BuildRequires:  perl(URI::file)
 # make in the lib/Alien/Build/Plugin/Build/Make.pm plugin
 # make or Alien::gmake
 BuildRequires:  make
+Suggests:       curl
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %if !%{defined perl_bootstrap}
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -134,6 +135,7 @@ Requires:       perl(Test2::Require) >= 0.000060
 Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 Requires:       perl(YAML)
+Suggests:       wget
 
 # Do not gather dependencies from the documentation
 %{?perl_default_filter}
@@ -173,6 +175,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Nov 03 2017 Petr Pisar <ppisar@redhat.com> - 1.28-1
+- 1.28 bump
+
 * Tue Sep 26 2017 Petr Pisar <ppisar@redhat.com> - 1.18-1
 - 1.18 bump
 
