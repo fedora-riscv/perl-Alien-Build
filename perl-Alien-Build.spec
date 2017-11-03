@@ -3,7 +3,7 @@
 
 Name:           perl-Alien-Build
 Version:        1.28
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Alien-Build/
@@ -136,6 +136,8 @@ Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 Requires:       perl(YAML)
 Suggests:       wget
+# Alien::Base::PkgConfig moved from perl-Alien-Base-ModuleBuild
+Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
 
 # Do not gather dependencies from the documentation
 %{?perl_default_filter}
@@ -175,6 +177,10 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Nov 03 2017 Petr Pisar <ppisar@redhat.com> - 1.28-2
+- Conflict with perl-Alien-Base-ModuleBuild < 1.00 because of
+  Alien::Base::PkgConfig
+
 * Fri Nov 03 2017 Petr Pisar <ppisar@redhat.com> - 1.28-1
 - 1.28 bump
 
