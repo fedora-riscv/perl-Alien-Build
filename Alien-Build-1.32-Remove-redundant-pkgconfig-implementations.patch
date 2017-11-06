@@ -1,4 +1,4 @@
-From fa94c01f3c8c8547fa74273b3dc16e74cdd6293d Mon Sep 17 00:00:00 2001
+From 67772deabe53cf334597c2ed796c105d16dacb10 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Fri, 8 Sep 2017 11:31:02 +0200
 Subject: [PATCH] Remove redundant pkgconfig implementations
@@ -17,14 +17,14 @@ Signed-off-by: Petr Písař <ppisar@redhat.com>
  lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm    |  16 +--
  t/01_use.t                                       |   4 -
  t/alien_build_plugin_pkgconfig_negotiate.t       |   2 +-
- t/alien_build_plugin_pkgconfig_negotiate__pick.t | 155 ++---------------------
- 6 files changed, 11 insertions(+), 174 deletions(-)
+ t/alien_build_plugin_pkgconfig_negotiate__pick.t | 153 ++---------------------
+ 6 files changed, 11 insertions(+), 172 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index 8823a8d..85f3758 100644
+index 656a43c..af1628c 100644
 --- a/MANIFEST
 +++ b/MANIFEST
-@@ -164,11 +164,9 @@ lib/Alien/Build/Plugin/Fetch/LocalDir.pm
+@@ -165,11 +165,9 @@ lib/Alien/Build/Plugin/Fetch/LocalDir.pm
  lib/Alien/Build/Plugin/Fetch/NetFTP.pm
  lib/Alien/Build/Plugin/Fetch/Wget.pm
  lib/Alien/Build/Plugin/Gather/IsolateDynamic.pm
@@ -36,7 +36,7 @@ index 8823a8d..85f3758 100644
  lib/Alien/Build/Plugin/Prefer.pod
  lib/Alien/Build/Plugin/Prefer/BadVersion.pm
  lib/Alien/Build/Plugin/Prefer/SortVersions.pm
-@@ -237,12 +235,10 @@ t/alien_build_plugin_fetch_netftp.t
+@@ -238,12 +236,10 @@ t/alien_build_plugin_fetch_netftp.t
  t/alien_build_plugin_fetch_wget.t
  t/alien_build_plugin_gather_isolatedynamic.t
  t/alien_build_plugin_meta.t
@@ -50,7 +50,7 @@ index 8823a8d..85f3758 100644
  t/alien_build_plugin_prefer_sortversions.t
  t/alien_build_plugin_probe_cbuilder.t
 diff --git a/Makefile.PL b/Makefile.PL
-index 44b7d77..a41f67a 100644
+index 5e806f9..c16c04d 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
 @@ -74,11 +74,9 @@ my %WriteMakefileArgs = (
@@ -73,16 +73,16 @@ index 44b7d77..a41f67a 100644
 \ No newline at end of file
 +}
 diff --git a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
-index 5524b53..7b22707 100644
+index 6645711..70051f3 100644
 --- a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 +++ b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 @@ -3,9 +3,7 @@ package Alien::Build::Plugin::PkgConfig::Negotiate;
  use strict;
  use warnings;
  use Alien::Build::Plugin;
--use Alien::Build::Plugin::PkgConfig::CommandLine;
- use Alien::Build::Plugin::PkgConfig::LibPkgConf;
 -use Alien::Build::Plugin::PkgConfig::PP;
+ use Alien::Build::Plugin::PkgConfig::LibPkgConf;
+-use Alien::Build::Plugin::PkgConfig::CommandLine;
  use Alien::Build::Util qw( _perl_config );
  use Carp ();
  
@@ -109,13 +109,13 @@ index 5524b53..7b22707 100644
      # fallback on installing PkgConfig.pm as a prereq if nothing else is avail).
      # we therefore expect at least one of these to work, if not, then the configuration
      # of the system has shifted from underneath us.
--    Carp::croak("Could not find an appropriate pkg-config implementation, please install PkgConfig.pm, PkgConfig::LibPkgConf, pkg-config or pkgconf");
-+    Carp::croak("Could not find an appropriate pkg-config implementation, please install PkgConfig::LibPkgConf");
+-    Carp::croak("Could not find an appropriate pkg-config or pkgconf implementation, please install PkgConfig.pm, PkgConfig::LibPkgConf, pkg-config or pkgconf");
++    Carp::croak("Could not find an appropriate pkg-config or pkgconf implementation, please install PkgConfig::LibPkgConf");
    }
  }
  
 diff --git a/t/01_use.t b/t/01_use.t
-index 3460c30..afceed7 100644
+index 20f28d0..a5cbd09 100644
 --- a/t/01_use.t
 +++ b/t/01_use.t
 @@ -40,11 +40,9 @@ require_ok 'Alien::Build::Plugin::Fetch::LocalDir';
@@ -130,36 +130,36 @@ index 3460c30..afceed7 100644
  require_ok 'Alien::Build::Plugin::Prefer::BadVersion';
  require_ok 'Alien::Build::Plugin::Prefer::SortVersions';
  require_ok 'Alien::Build::Plugin::Probe::CBuilder';
-@@ -97,11 +95,9 @@ ok(-f 't/alien_build_plugin_fetch_localdir.t', 'test for Alien::Build::Plugin::F
- ok(-f 't/alien_build_plugin_fetch_netftp.t', 'test for Alien::Build::Plugin::Fetch::NetFTP');
- ok(-f 't/alien_build_plugin_fetch_wget.t', 'test for Alien::Build::Plugin::Fetch::Wget');
- ok(-f 't/alien_build_plugin_gather_isolatedynamic.t', 'test for Alien::Build::Plugin::Gather::IsolateDynamic');
--ok(-f 't/alien_build_plugin_pkgconfig_commandline.t', 'test for Alien::Build::Plugin::PkgConfig::CommandLine');
- ok(-f 't/alien_build_plugin_pkgconfig_libpkgconf.t', 'test for Alien::Build::Plugin::PkgConfig::LibPkgConf');
- ok(-f 't/alien_build_plugin_pkgconfig_makestatic.t', 'test for Alien::Build::Plugin::PkgConfig::MakeStatic');
- ok(-f 't/alien_build_plugin_pkgconfig_negotiate.t', 'test for Alien::Build::Plugin::PkgConfig::Negotiate');
--ok(-f 't/alien_build_plugin_pkgconfig_pp.t', 'test for Alien::Build::Plugin::PkgConfig::PP');
- ok(-f 't/alien_build_plugin_prefer_badversion.t', 'test for Alien::Build::Plugin::Prefer::BadVersion');
- ok(-f 't/alien_build_plugin_prefer_sortversions.t', 'test for Alien::Build::Plugin::Prefer::SortVersions');
- ok(-f 't/alien_build_plugin_probe_cbuilder.t', 'test for Alien::Build::Plugin::Probe::CBuilder');
+@@ -97,11 +95,9 @@ ok -f 't/alien_build_plugin_fetch_localdir.t', 'test for Alien::Build::Plugin::F
+ ok -f 't/alien_build_plugin_fetch_netftp.t', 'test for Alien::Build::Plugin::Fetch::NetFTP';
+ ok -f 't/alien_build_plugin_fetch_wget.t', 'test for Alien::Build::Plugin::Fetch::Wget';
+ ok -f 't/alien_build_plugin_gather_isolatedynamic.t', 'test for Alien::Build::Plugin::Gather::IsolateDynamic';
+-ok -f 't/alien_build_plugin_pkgconfig_commandline.t', 'test for Alien::Build::Plugin::PkgConfig::CommandLine';
+ ok -f 't/alien_build_plugin_pkgconfig_libpkgconf.t', 'test for Alien::Build::Plugin::PkgConfig::LibPkgConf';
+ ok -f 't/alien_build_plugin_pkgconfig_makestatic.t', 'test for Alien::Build::Plugin::PkgConfig::MakeStatic';
+ ok -f 't/alien_build_plugin_pkgconfig_negotiate.t', 'test for Alien::Build::Plugin::PkgConfig::Negotiate';
+-ok -f 't/alien_build_plugin_pkgconfig_pp.t', 'test for Alien::Build::Plugin::PkgConfig::PP';
+ ok -f 't/alien_build_plugin_prefer_badversion.t', 'test for Alien::Build::Plugin::Prefer::BadVersion';
+ ok -f 't/alien_build_plugin_prefer_sortversions.t', 'test for Alien::Build::Plugin::Prefer::SortVersions';
+ ok -f 't/alien_build_plugin_probe_cbuilder.t', 'test for Alien::Build::Plugin::Probe::CBuilder';
 diff --git a/t/alien_build_plugin_pkgconfig_negotiate.t b/t/alien_build_plugin_pkgconfig_negotiate.t
-index 95e0d84..9492ea1 100644
+index 1233b9a..9492ea1 100644
 --- a/t/alien_build_plugin_pkgconfig_negotiate.t
 +++ b/t/alien_build_plugin_pkgconfig_negotiate.t
 @@ -16,7 +16,7 @@ subtest 'pick' => sub {
  
  subtest 'override' => sub {
  
--  foreach my $name (qw( CommandLine LibPkgConf PP ))
+-  foreach my $name (qw( PP LibPkgConf CommandLine ))
 +  foreach my $name (qw( LibPkgConf ))
    {
      local $ENV{ALIEN_BUILD_PKG_CONFIG} = "PkgConfig::$name";
      subtest $ENV{ALIEN_BUILD_PKG_CONFIG} => sub {
 diff --git a/t/alien_build_plugin_pkgconfig_negotiate__pick.t b/t/alien_build_plugin_pkgconfig_negotiate__pick.t
-index 70181a4..4d88c91 100644
+index 105c6b6..db886f8 100644
 --- a/t/alien_build_plugin_pkgconfig_negotiate__pick.t
 +++ b/t/alien_build_plugin_pkgconfig_negotiate__pick.t
-@@ -24,9 +24,10 @@ subtest 'LibPkgConf' => sub {
+@@ -25,9 +25,10 @@ subtest 'LibPkgConf' => sub {
    
        local $PkgConfig::LibPkgConf::VERSION = '0.01';
  
@@ -173,7 +173,7 @@ index 70181a4..4d88c91 100644
        );
  
      };
-@@ -39,9 +40,10 @@ subtest 'LibPkgConf' => sub {
+@@ -40,9 +41,10 @@ subtest 'LibPkgConf' => sub {
      # cannot be loaded for the rest of this .t file
      note scalar capture_merged { Devel::Hide->import(qw( PkgConfig::LibPkgConf )) };
    
@@ -187,7 +187,7 @@ index 70181a4..4d88c91 100644
      );
  
    };
-@@ -55,146 +57,5 @@ my $make_pkgconfig_libpkgconf_unavailable = Test2::Mock->new(
+@@ -56,144 +58,5 @@ my $make_pkgconfig_libpkgconf_unavailable = Test2::Mock->new(
    ],
  );
  
@@ -198,8 +198,6 @@ index 70181a4..4d88c91 100644
 -
 -  my %which;
 -
--  require File::Which;
--  
 -  my $mock = Test2::Mock->new(
 -    class => 'File::Which',
 -    override => [

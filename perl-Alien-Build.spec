@@ -2,15 +2,15 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.28
-Release:        2%{?dist}
+Version:        1.32
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Alien-Build/
 Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.28-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-1.32-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  perl-generators
@@ -97,7 +97,7 @@ BuildRequires:  perl(Env::ShellWords)
 BuildRequires:  perl(HTTP::Tiny) >= 0.044
 # PkgConfig not packaged
 BuildRequires:  perl(Readonly) >= 1.60
-BuildRequires:  perl(Test::Exec)
+BuildRequires:  perl(Sort::Versions)
 BuildRequires:  perl(URI::file)
 %endif
 # make in the lib/Alien/Build/Plugin/Build/CMake.pm plugin
@@ -177,6 +177,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 06 2017 Petr Pisar <ppisar@redhat.com> - 1.32-1
+- 1.32 bump
+
 * Fri Nov 03 2017 Petr Pisar <ppisar@redhat.com> - 1.28-2
 - Conflict with perl-Alien-Base-ModuleBuild < 1.00 because of
   Alien::Base::PkgConfig
