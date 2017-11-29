@@ -88,9 +88,9 @@ BuildRequires:  perl(Test2::V0) >= 0.000060
 %if !%{defined perl_bootstrap}
 # Break build cycle: Acme::Alien::DontPanic → Test::Alien
 BuildRequires:  perl(Acme::Alien::DontPanic) >= 0.026
-%endif
+# Break build cycle: perl-Alien-Base-ModuleBuild → perl-Alien-Build
 BuildRequires:  perl(Alien::Base::ModuleBuild) >= 0.040
-BuildRequires:  perl(Alien::Base::PkgConfig) >= 0.040
+%endif
 BuildRequires:  perl(Devel::Hide)
 BuildRequires:  perl(Env::ShellWords)
 # FFI::Platypus not packaged
