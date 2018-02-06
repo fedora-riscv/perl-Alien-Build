@@ -1,4 +1,4 @@
-From 67772deabe53cf334597c2ed796c105d16dacb10 Mon Sep 17 00:00:00 2001
+From e105f18eac087c9b1b8d6a73835de8b45564884c Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Fri, 8 Sep 2017 11:31:02 +0200
 Subject: [PATCH] Remove redundant pkgconfig implementations
@@ -21,10 +21,10 @@ Signed-off-by: Petr Písař <ppisar@redhat.com>
  6 files changed, 11 insertions(+), 172 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index 656a43c..af1628c 100644
+index 559f19f..0e0a343 100644
 --- a/MANIFEST
 +++ b/MANIFEST
-@@ -165,11 +165,9 @@ lib/Alien/Build/Plugin/Fetch/LocalDir.pm
+@@ -166,11 +166,9 @@ lib/Alien/Build/Plugin/Fetch/LocalDir.pm
  lib/Alien/Build/Plugin/Fetch/NetFTP.pm
  lib/Alien/Build/Plugin/Fetch/Wget.pm
  lib/Alien/Build/Plugin/Gather/IsolateDynamic.pm
@@ -36,7 +36,7 @@ index 656a43c..af1628c 100644
  lib/Alien/Build/Plugin/Prefer.pod
  lib/Alien/Build/Plugin/Prefer/BadVersion.pm
  lib/Alien/Build/Plugin/Prefer/SortVersions.pm
-@@ -238,12 +236,10 @@ t/alien_build_plugin_fetch_netftp.t
+@@ -239,12 +237,10 @@ t/alien_build_plugin_fetch_netftp.t
  t/alien_build_plugin_fetch_wget.t
  t/alien_build_plugin_gather_isolatedynamic.t
  t/alien_build_plugin_meta.t
@@ -50,30 +50,30 @@ index 656a43c..af1628c 100644
  t/alien_build_plugin_prefer_sortversions.t
  t/alien_build_plugin_probe_cbuilder.t
 diff --git a/Makefile.PL b/Makefile.PL
-index 5e806f9..c16c04d 100644
+index 1f649b3..68c8ba8 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
 @@ -74,11 +74,9 @@ my %WriteMakefileArgs = (
-     "lib/Alien/Build/Plugin/Fetch/NetFTP.pm" => "\$(INST_LIB)/Alien/Build/Plugin/Fetch/NetFTP.pm",
-     "lib/Alien/Build/Plugin/Fetch/Wget.pm" => "\$(INST_LIB)/Alien/Build/Plugin/Fetch/Wget.pm",
-     "lib/Alien/Build/Plugin/Gather/IsolateDynamic.pm" => "\$(INST_LIB)/Alien/Build/Plugin/Gather/IsolateDynamic.pm",
--    "lib/Alien/Build/Plugin/PkgConfig/CommandLine.pm" => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/CommandLine.pm",
-     "lib/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm" => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm",
-     "lib/Alien/Build/Plugin/PkgConfig/MakeStatic.pm" => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/MakeStatic.pm",
-     "lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm" => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/Negotiate.pm",
--    "lib/Alien/Build/Plugin/PkgConfig/PP.pm" => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/PP.pm",
-     "lib/Alien/Build/Plugin/Prefer.pod" => "\$(INST_LIB)/Alien/Build/Plugin/Prefer.pod",
-     "lib/Alien/Build/Plugin/Prefer/BadVersion.pm" => "\$(INST_LIB)/Alien/Build/Plugin/Prefer/BadVersion.pm",
-     "lib/Alien/Build/Plugin/Prefer/SortVersions.pm" => "\$(INST_LIB)/Alien/Build/Plugin/Prefer/SortVersions.pm",
+     "lib/Alien/Build/Plugin/Fetch/NetFTP.pm"             => "\$(INST_LIB)/Alien/Build/Plugin/Fetch/NetFTP.pm",
+     "lib/Alien/Build/Plugin/Fetch/Wget.pm"               => "\$(INST_LIB)/Alien/Build/Plugin/Fetch/Wget.pm",
+     "lib/Alien/Build/Plugin/Gather/IsolateDynamic.pm"    => "\$(INST_LIB)/Alien/Build/Plugin/Gather/IsolateDynamic.pm",
+-    "lib/Alien/Build/Plugin/PkgConfig/CommandLine.pm"    => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/CommandLine.pm",
+     "lib/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm"     => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm",
+     "lib/Alien/Build/Plugin/PkgConfig/MakeStatic.pm"     => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/MakeStatic.pm",
+     "lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm"      => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/Negotiate.pm",
+-    "lib/Alien/Build/Plugin/PkgConfig/PP.pm"             => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/PP.pm",
+     "lib/Alien/Build/Plugin/Prefer.pod"                  => "\$(INST_LIB)/Alien/Build/Plugin/Prefer.pod",
+     "lib/Alien/Build/Plugin/Prefer/BadVersion.pm"        => "\$(INST_LIB)/Alien/Build/Plugin/Prefer/BadVersion.pm",
+     "lib/Alien/Build/Plugin/Prefer/SortVersions.pm"      => "\$(INST_LIB)/Alien/Build/Plugin/Prefer/SortVersions.pm",
 @@ -180,4 +178,4 @@ sub requires { goto &runtime_requires }
  sub runtime_requires {
-   my ($module, $version_or_range) = @_;
-   _add_prereq(PREREQ_PM => $module, $version_or_range);
+   my ( $module, $version_or_range ) = @_;
+   _add_prereq( PREREQ_PM => $module, $version_or_range );
 -}
 \ No newline at end of file
 +}
 diff --git a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
-index 6645711..70051f3 100644
+index f9c7269..6e65e39 100644
 --- a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 +++ b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 @@ -3,9 +3,7 @@ package Alien::Build::Plugin::PkgConfig::Negotiate;
