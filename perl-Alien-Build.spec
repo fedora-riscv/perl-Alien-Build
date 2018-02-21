@@ -25,6 +25,8 @@ BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 # Run-time:
 %if !%{defined perl_bootstrap}
+# t/alien_build_plugin_build_cmake.t executes gcc via cmake (bug #923024)
+BuildRequires:  gcc
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
 BuildRequires:  perl(Alien::cmake3) >= 0.02
 %endif
@@ -108,6 +110,8 @@ BuildRequires:  perl(URI::file)
 # make or Alien::gmake
 BuildRequires:  make
 Suggests:       curl
+# Alien::Base::Wrapper::cc() executes $Config{cc}.
+Requires:       gcc
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %if !%{defined perl_bootstrap}
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -183,6 +187,8 @@ make test
 %changelog
 * Fri Feb 23 2018 Petr Pisar <ppisar@redhat.com> - 1.36-2
 - Do not require C++ for build ing C tests (bug #923024)
+- Build-require gcc because it is executed by tests via cmake (bug #923024)
+- Run-requires gcc for Alien::Base::Wrapper::cc()
 
 * Tue Feb 06 2018 Petr Pisar <ppisar@redhat.com> - 1.36-1
 - 1.36 bump
