@@ -1,0 +1,62 @@
+From 0ad9a700c59d0b13b19791381fc531bb7e5d979a Mon Sep 17 00:00:00 2001
+From: perl-Git-CPAN-Patch Owner <perl-Git-CPAN-Patch-owner@fedoraproject.org>
+Date: Fri, 23 Feb 2018 14:23:30 +0100
+Subject: [PATCH] corpus/cmake-libpalindrome is in C
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+CMake defaults to C++ language. If C++ compiler is not installed, cmake dies
+when performing t/alien_build_plugin_build_cmake.t test:
+
+$ perl -Ilib t/alien_build_plugin_build_cmake.t
+not ok 1 - basic {
+    ok 1 - alienfile compiles
+    not ok 2 - alien builds okay
+    # Failed test 'alien builds okay'
+    # at t/alien_build_plugin_build_cmake.t line 68.
+    # Alien::Build::Plugin::Core::Download> downloaded cmake-libpalindrome
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/LICENSE /tmp/T1M9kh3zs6/root/build_bDC_/LICENSE
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/CMakeLists.txt /tmp/T1M9kh3zs6/root/build_bDC_/CMakeLists.txt
+    # Alien::Build::Util> mkdir -p /tmp/T1M9kh3zs6/root/build_bDC_/palx
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/palx/main.c /tmp/T1M9kh3zs6/root/build_bDC_/palx/main.c
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/palx/CMakeLists.txt /tmp/T1M9kh3zs6/root/build_bDC_/palx/CMakeLists.txt
+    # Alien::Build::Util> mkdir -p /tmp/T1M9kh3zs6/root/build_bDC_/libpalindrome
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/libpalindrome/palindrome.c /tmp/T1M9kh3zs6/root/build_bDC_/libpalindrome/palindrome.c
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/libpalindrome/libpalindrome.h /tmp/T1M9kh3zs6/root/build_bDC_/libpalindrome/libpalindrome.h
+    # Alien::Build::Util> Alien::Build> cp /tmp/Alien-Build/corpus/cmake-libpalindrome/libpalindrome/CMakeLists.txt /tmp/T1M9kh3zs6/root/build_bDC_/libpalindrome/CMakeLists.txt
+    # Alien::Build::CommandSequence> + /usr/bin/cmake -G Unix Makefiles -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_INSTALL_PREFIX:PATH=/tmp/T1M9kh3zs6/prefix -DCMAKE_MAKE_PROGRAM:PATH=make /tmp/T1M9kh3zs6/root/build_bDC_
+    # Re-run cmake no build system arguments
+    # -- The C compiler identification is GNU 8.0.1
+    # -- The CXX compiler identification is unknown
+    # -- Check for working C compiler: /usr/bin/cc
+    # -- Check for working C compiler: /usr/bin/cc -- works
+    # -- Detecting C compiler ABI info
+    # -- Detecting C compiler ABI info - done
+    # -- Detecting C compile features
+    # -- Detecting C compile features - done
+    # CMake Error at CMakeLists.txt:2 (project):
+    #   No CMAKE_CXX_COMPILER could be found.
+
+This patch fixes the corpus/cmake-libpalindrome's CMakeLists.txt to specify
+libpalindrome is written in C. This frees Alien-Build tests from dependncy on
+C++ compiler.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ corpus/cmake-libpalindrome/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/corpus/cmake-libpalindrome/CMakeLists.txt b/corpus/cmake-libpalindrome/CMakeLists.txt
+index dcfec13..09527c3 100644
+--- a/corpus/cmake-libpalindrome/CMakeLists.txt
++++ b/corpus/cmake-libpalindrome/CMakeLists.txt
+@@ -1,4 +1,4 @@
+ cmake_minimum_required (VERSION 3.0.0)
+-project (libpalindrome)
++project (libpalindrome C)
+ add_subdirectory (libpalindrome)
+ add_subdirectory (palx)
+-- 
+2.13.6
+
