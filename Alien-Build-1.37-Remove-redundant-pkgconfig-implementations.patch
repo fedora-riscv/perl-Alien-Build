@@ -1,4 +1,4 @@
-From e105f18eac087c9b1b8d6a73835de8b45564884c Mon Sep 17 00:00:00 2001
+From 9cfe8835fcac12495c50e6b66727b310e40c4ca3 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Fri, 8 Sep 2017 11:31:02 +0200
 Subject: [PATCH] Remove redundant pkgconfig implementations
@@ -50,7 +50,7 @@ index 559f19f..0e0a343 100644
  t/alien_build_plugin_prefer_sortversions.t
  t/alien_build_plugin_probe_cbuilder.t
 diff --git a/Makefile.PL b/Makefile.PL
-index 1f649b3..68c8ba8 100644
+index 3551946..5870959 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
 @@ -74,11 +74,9 @@ my %WriteMakefileArgs = (
@@ -73,7 +73,7 @@ index 1f649b3..68c8ba8 100644
 \ No newline at end of file
 +}
 diff --git a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
-index f9c7269..6e65e39 100644
+index fd1b816..6dce136 100644
 --- a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 +++ b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 @@ -3,9 +3,7 @@ package Alien::Build::Plugin::PkgConfig::Negotiate;
@@ -92,7 +92,7 @@ index f9c7269..6e65e39 100644
    
 -  if(Alien::Build::Plugin::PkgConfig::CommandLine->available)
 -  {
--    unless(_perl_config('osname') eq 'solaris' && _perl_config('ptrsize') == 8)
+-    if(! (_perl_config('osname') eq 'solaris' && _perl_config('ptrsize') == 8))
 -    {
 -      return 'PkgConfig::CommandLine';
 -    }

@@ -2,18 +2,15 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.36
-Release:        2%{?dist}
+Version:        1.37
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Alien-Build/
 Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.36-Remove-redundant-pkgconfig-implementations.patch
-# Do not require C++ for build ing C tests, bug #923024,
-# <https://github.com/Perl5-Alien/Alien-Build/pull/53>
-Patch1:         Alien-Build-1.36-corpus-cmake-libpalindrome-is-in-C.patch
+Patch0:         Alien-Build-1.37-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  perl-generators
@@ -165,7 +162,6 @@ client, and work closely with Alien::Base which is used at run time.
 %patch0 -p1
 rm lib/Alien/Build/Plugin/PkgConfig/{CommandLine,PP}.pm 
 rm t/alien_build_plugin_pkgconfig_{commandline,pp}.t
-%patch1 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
@@ -185,6 +181,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Feb 26 2018 Petr Pisar <ppisar@redhat.com> - 1.37-1
+- 1.37 bump
+
 * Fri Feb 23 2018 Petr Pisar <ppisar@redhat.com> - 1.36-2
 - Do not require C++ for build ing C tests (bug #923024)
 - Build-require gcc because it is executed by tests via cmake (bug #923024)
