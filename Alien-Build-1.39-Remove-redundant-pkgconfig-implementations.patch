@@ -1,4 +1,4 @@
-From 9cfe8835fcac12495c50e6b66727b310e40c4ca3 Mon Sep 17 00:00:00 2001
+From b835197a8a160a4e88a52789264f9d3622026c2d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Fri, 8 Sep 2017 11:31:02 +0200
 Subject: [PATCH] Remove redundant pkgconfig implementations
@@ -14,11 +14,11 @@ Signed-off-by: Petr Písař <ppisar@redhat.com>
 ---
  MANIFEST                                         |   4 -
  Makefile.PL                                      |   4 +-
- lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm    |  16 +--
+ lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm    |  19 +--
  t/01_use.t                                       |   4 -
  t/alien_build_plugin_pkgconfig_negotiate.t       |   2 +-
  t/alien_build_plugin_pkgconfig_negotiate__pick.t | 153 ++---------------------
- 6 files changed, 11 insertions(+), 172 deletions(-)
+ 6 files changed, 11 insertions(+), 175 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
 index 559f19f..0e0a343 100644
@@ -50,7 +50,7 @@ index 559f19f..0e0a343 100644
  t/alien_build_plugin_prefer_sortversions.t
  t/alien_build_plugin_probe_cbuilder.t
 diff --git a/Makefile.PL b/Makefile.PL
-index 3551946..5870959 100644
+index cb1fa71..553de9b 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
 @@ -74,11 +74,9 @@ my %WriteMakefileArgs = (
@@ -73,7 +73,7 @@ index 3551946..5870959 100644
 \ No newline at end of file
 +}
 diff --git a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
-index fd1b816..6dce136 100644
+index 89622cf..7388c3a 100644
 --- a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 +++ b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 @@ -3,9 +3,7 @@ package Alien::Build::Plugin::PkgConfig::Negotiate;
@@ -86,12 +86,15 @@ index fd1b816..6dce136 100644
  use Alien::Build::Util qw( _perl_config );
  use Carp ();
  
-@@ -32,18 +30,6 @@ sub pick
+@@ -31,21 +29,6 @@ sub pick
+   {
      return 'PkgConfig::LibPkgConf';
    }
-   
+-  
 -  if(Alien::Build::Plugin::PkgConfig::CommandLine->available)
 -  {
+-    # TODO: determine environment or flags necessary for using pkg-config
+-    # on solaris 64 bit.
 -    if(! (_perl_config('osname') eq 'solaris' && _perl_config('ptrsize') == 8))
 -    {
 -      return 'PkgConfig::CommandLine';
@@ -105,7 +108,7 @@ index fd1b816..6dce136 100644
    else
    {
      # this is a fata error.  because we check for a pkg-config implementation
-@@ -51,7 +37,7 @@ sub pick
+@@ -53,7 +36,7 @@ sub pick
      # fallback on installing PkgConfig.pm as a prereq if nothing else is avail).
      # we therefore expect at least one of these to work, if not, then the configuration
      # of the system has shifted from underneath us.
@@ -333,5 +336,5 @@ index 105c6b6..db886f8 100644
  done_testing;
  
 -- 
-2.13.6
+2.14.3
 
