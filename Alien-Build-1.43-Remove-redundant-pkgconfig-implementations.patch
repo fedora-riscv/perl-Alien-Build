@@ -1,4 +1,4 @@
-From ac42c9893901afa59daa23361485f3131678f9ee Mon Sep 17 00:00:00 2001
+From f4102aafec479748c15e28c844f257595175ef38 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Fri, 8 Sep 2017 11:31:02 +0200
 Subject: [PATCH] Remove redundant pkgconfig implementations
@@ -14,14 +14,14 @@ Signed-off-by: Petr Písař <ppisar@redhat.com>
 ---
  MANIFEST                                         |   4 -
  Makefile.PL                                      |   4 +-
- lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm    |  19 +--
+ lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm    |  20 +--
  t/01_use.t                                       |   4 -
  t/alien_build_plugin_pkgconfig_negotiate.t       |   2 +-
  t/alien_build_plugin_pkgconfig_negotiate__pick.t | 153 ++---------------------
- 6 files changed, 11 insertions(+), 175 deletions(-)
+ 6 files changed, 11 insertions(+), 176 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index 559f19f..0e0a343 100644
+index 359958f..11b9703 100644
 --- a/MANIFEST
 +++ b/MANIFEST
 @@ -166,11 +166,9 @@ lib/Alien/Build/Plugin/Fetch/LocalDir.pm
@@ -50,7 +50,7 @@ index 559f19f..0e0a343 100644
  t/alien_build_plugin_prefer_sortversions.t
  t/alien_build_plugin_probe_cbuilder.t
 diff --git a/Makefile.PL b/Makefile.PL
-index 2bd520b..bbfd7e8 100644
+index 86d3484..b86b991 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
 @@ -74,11 +74,9 @@ my %WriteMakefileArgs = (
@@ -73,7 +73,7 @@ index 2bd520b..bbfd7e8 100644
 \ No newline at end of file
 +}
 diff --git a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
-index 80929ec..e4dc274 100644
+index 2d65bfc..cad800d 100644
 --- a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 +++ b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 @@ -3,9 +3,7 @@ package Alien::Build::Plugin::PkgConfig::Negotiate;
@@ -86,15 +86,16 @@ index 80929ec..e4dc274 100644
  use Alien::Build::Util qw( _perl_config );
  use Carp ();
  
-@@ -31,21 +29,6 @@ sub pick
-   {
+@@ -32,22 +30,6 @@ sub pick
      return 'PkgConfig::LibPkgConf';
    }
--  
+   
 -  if(Alien::Build::Plugin::PkgConfig::CommandLine->available)
 -  {
 -    # TODO: determine environment or flags necessary for using pkg-config
 -    # on solaris 64 bit.
+-    # Some advice on pkg-config and 64 bit Solaris
+-    # https://docs.oracle.com/cd/E53394_01/html/E61689/gplhi.html
 -    if(! (_perl_config('osname') eq 'solaris' && _perl_config('ptrsize') == 8))
 -    {
 -      return 'PkgConfig::CommandLine';
@@ -108,7 +109,7 @@ index 80929ec..e4dc274 100644
    else
    {
      # this is a fata error.  because we check for a pkg-config implementation
-@@ -53,7 +36,7 @@ sub pick
+@@ -55,7 +37,7 @@ sub pick
      # fallback on installing PkgConfig.pm as a prereq if nothing else is avail).
      # we therefore expect at least one of these to work, if not, then the configuration
      # of the system has shifted from underneath us.
@@ -118,7 +119,7 @@ index 80929ec..e4dc274 100644
  }
  
 diff --git a/t/01_use.t b/t/01_use.t
-index a8cff2e..cb8d9bd 100644
+index ecc8243..8e7daf2 100644
 --- a/t/01_use.t
 +++ b/t/01_use.t
 @@ -40,11 +40,9 @@ require_ok 'Alien::Build::Plugin::Fetch::LocalDir';
@@ -133,7 +134,7 @@ index a8cff2e..cb8d9bd 100644
  require_ok 'Alien::Build::Plugin::Prefer::BadVersion';
  require_ok 'Alien::Build::Plugin::Prefer::SortVersions';
  require_ok 'Alien::Build::Plugin::Probe::CBuilder';
-@@ -97,11 +95,9 @@ ok -f 't/alien_build_plugin_fetch_localdir.t',           'test for Alien::Build:
+@@ -97,11 +95,9 @@ ok -f 't/alien_build_plugin_fetch_localdir.t',                'test for Alien::B
  ok -f 't/alien_build_plugin_fetch_netftp.t',                  'test for Alien::Build::Plugin::Fetch::NetFTP';
  ok -f 't/alien_build_plugin_fetch_wget.t',                    'test for Alien::Build::Plugin::Fetch::Wget';
  ok -f 't/alien_build_plugin_gather_isolatedynamic.t',         'test for Alien::Build::Plugin::Gather::IsolateDynamic';
@@ -336,5 +337,5 @@ index 105c6b6..db886f8 100644
  done_testing;
  
 -- 
-2.14.3
+2.14.4
 

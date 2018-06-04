@@ -2,15 +2,15 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.42
+Version:        1.43
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
-URL:            http://search.cpan.org/dist/Alien-Build/
-Source0:        http://www.cpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
+URL:            https://metacpan.org/release/Alien-Build
+Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.42-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-1.43-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 BuildRequires:  perl-generators
@@ -181,6 +181,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jun 04 2018 Petr Pisar <ppisar@redhat.com> - 1.43-1
+- 1.43 bump
+
 * Thu May 10 2018 Jitka Plesnikova <jplesnik@redhat.com> - 1.42-1
 - 1.42 bump
 
