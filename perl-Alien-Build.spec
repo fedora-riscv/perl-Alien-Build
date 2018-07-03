@@ -1,10 +1,9 @@
 # Run optional test
 %{bcond_without perl_Alien_Build_enables_optional_test}
-%global perl_bootstrap 1
 
 Name:           perl-Alien-Build
 Version:        1.46
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            https://metacpan.org/release/Alien-Build
@@ -182,6 +181,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Jul 03 2018 Petr Pisar <ppisar@redhat.com> - 1.46-3
+- Perl 5.28 re-rebuild of bootstrapped packages
+
 * Tue Jul 03 2018 Petr Pisar <ppisar@redhat.com> - 1.46-2
 - Perl 5.28 rebuild
 
