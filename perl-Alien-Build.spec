@@ -2,8 +2,8 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.46
-Release:        3%{?dist}
+Version:        1.48
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            https://metacpan.org/release/Alien-Build
@@ -13,17 +13,21 @@ Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%
 Patch0:         Alien-Build-1.46-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
+# Makefile.PL executes ./inc/probebad.pl that executes XS checks
+BuildRequires:  gcc
+BuildRequires:  perl-devel
 BuildRequires:  perl-generators
 BuildRequires:  perl-interpreter
 BuildRequires:  perl(:VERSION) >= 5.8.1
+BuildRequires:  perl(ExtUtils::CBuilder)
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
+BuildRequires:  perl(ExtUtils::ParseXS)
 BuildRequires:  perl(File::Which) >= 1.10
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 # Run-time:
 %if !%{defined perl_bootstrap}
 # t/alien_build_plugin_build_cmake.t executes gcc via cmake (bug #923024)
-BuildRequires:  gcc
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
 BuildRequires:  perl(Alien::cmake3) >= 0.02
 %endif
@@ -181,6 +185,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Jul 09 2018 Petr Pisar <ppisar@redhat.com> - 1.48-1
+- 1.48 bump
+
 * Tue Jul 03 2018 Petr Pisar <ppisar@redhat.com> - 1.46-3
 - Perl 5.28 re-rebuild of bootstrapped packages
 
