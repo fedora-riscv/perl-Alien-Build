@@ -3,7 +3,7 @@
 
 Name:           perl-Alien-Build
 Version:        1.48
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Build external dependencies for use in CPAN
 License:        GPL+ or Artistic
 URL:            https://metacpan.org/release/Alien-Build
@@ -185,6 +185,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.48-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Mon Jul 09 2018 Petr Pisar <ppisar@redhat.com> - 1.48-1
 - 1.48 bump
 
