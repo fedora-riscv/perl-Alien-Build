@@ -2,9 +2,14 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.48
-Release:        2%{?dist}
+Version:        1.49
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
+# lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
+# (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
+# object file and a static library).
+# testalienMC_9y is a unused garbage
+# <https://github.com/Perl5-Alien/Alien-Build/issues/70>
 License:        GPL+ or Artistic
 URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
@@ -68,7 +73,6 @@ BuildRequires:  perl(PkgConfig::LibPkgConf::Util) >= 0.04
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Storable)
 BuildRequires:  perl(Test2::API) >= 1.302015
-BuildRequires:  perl(Test2::Require) >= 0.000060
 BuildRequires:  perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 BuildRequires:  perl(YAML)
@@ -86,6 +90,7 @@ BuildRequires:  perl(List::Util)
 BuildRequires:  perl(Net::FTP)
 # Proc::Daemon not used
 BuildRequires:  perl(Test2::Mock) >= 0.000060
+BuildRequires:  perl(Test2::Require) >= 0.000060
 BuildRequires:  perl(Test2::Require::Module) >= 0.000060
 BuildRequires:  perl(Test2::V0) >= 0.000060
 # URI not used
@@ -139,7 +144,6 @@ Requires:       perl(PkgConfig::LibPkgConf::Client) >= 0.04
 Requires:       perl(PkgConfig::LibPkgConf::Util) >= 0.04
 Requires:       perl(Storable)
 Requires:       perl(Test2::API) >= 1.302015
-Requires:       perl(Test2::Require) >= 0.000060
 Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 Requires:       perl(YAML)
@@ -151,7 +155,7 @@ Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
 %{?perl_default_filter}
 
 # Remove underspecified dependencies
-%global __requires_exclude %{?__requires_exclude:%{__requires_exclude}|}^perl\\((Capture::Tiny|Path::Tiny|Test2::API|Test2::Require|Text::ParseWords)\\)$
+%global __requires_exclude %{?__requires_exclude:%{__requires_exclude}|}^perl\\((Capture::Tiny|Path::Tiny|Test2::API|Text::ParseWords)\\)$
 
 %description
 This package provides tools for building external (non-CPAN) dependencies
@@ -185,6 +189,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 05 2018 Petr Pisar <ppisar@redhat.com> - 1.49-1
+- 1.49 bump
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.48-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
