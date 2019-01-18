@@ -2,7 +2,7 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.49
+Version:        1.50
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -189,6 +189,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jan 18 2019 Petr Pisar <ppisar@redhat.com> - 1.50-1
+- 1.50 bump
+
 * Mon Nov 05 2018 Petr Pisar <ppisar@redhat.com> - 1.49-1
 - 1.49 bump
 
