@@ -2,8 +2,8 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.51
-Release:        2%{?dist}
+Version:        1.52
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -172,11 +172,11 @@ rm lib/Alien/Build/Plugin/PkgConfig/{CommandLine,PP}.pm
 rm t/alien_build_plugin_pkgconfig_{commandline,pp}.t
 
 %build
-perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
-make %{?_smp_mflags}
+perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1 NO_PERLLOCAL=1
+%{make_build}
 
 %install
-make pure_install DESTDIR=$RPM_BUILD_ROOT
+%{make_install}
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
@@ -189,6 +189,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Feb 11 2019 Petr Pisar <ppisar@redhat.com> - 1.52-1
+- 1.52 bump
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.51-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
