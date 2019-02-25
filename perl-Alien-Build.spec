@@ -2,7 +2,7 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.52
+Version:        1.55
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -15,7 +15,7 @@ URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.46-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-1.55-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 # Makefile.PL executes ./inc/probebad.pl that executes XS checks
@@ -65,7 +65,7 @@ BuildRequires:  perl(overload)
 BuildRequires:  perl(Path::Tiny) >= 0.077
 # Alien::Build::Plugin::PkgConfig::Negotiate finds a pkgconfig implementation
 # in this order:
-# PkgConfig::LibPkgConf 0.04, pkgconf, pkg-config, PkgConfig 0.14026
+# PkgConfig::LibPkgConf 0.04, pkgconf, pkg-config, PkgConfig 0.14026.
 # We selected the most advanced PkgConfig::LibPkgConf and removed the other
 # plugins.
 BuildRequires:  perl(PkgConfig::LibPkgConf::Client) >= 0.04
@@ -189,6 +189,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Feb 25 2019 Petr Pisar <ppisar@redhat.com> - 1.55-1
+- 1.55 bump
+
 * Mon Feb 11 2019 Petr Pisar <ppisar@redhat.com> - 1.52-1
 - 1.52 bump
 
