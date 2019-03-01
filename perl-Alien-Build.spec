@@ -2,7 +2,7 @@
 %{bcond_without perl_Alien_Build_enables_optional_test}
 
 Name:           perl-Alien-Build
-Version:        1.55
+Version:        1.60
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -105,6 +105,7 @@ BuildRequires:  perl(Alien::Base::ModuleBuild) >= 0.040
 BuildRequires:  perl(Devel::Hide)
 BuildRequires:  perl(Env::ShellWords)
 # FFI::Platypus not packaged
+# HTTP::Tiny or curl
 BuildRequires:  perl(HTTP::Tiny) >= 0.044
 # PkgConfig not packaged
 BuildRequires:  perl(Readonly) >= 1.60
@@ -189,6 +190,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Mar 01 2019 Petr Pisar <ppisar@redhat.com> - 1.60-1
+- 1.60 bump
+
 * Mon Feb 25 2019 Petr Pisar <ppisar@redhat.com> - 1.55-1
 - 1.55 bump
 
