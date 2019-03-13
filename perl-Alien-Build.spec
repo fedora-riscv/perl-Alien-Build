@@ -1,9 +1,14 @@
 # Run optional test
 %{bcond_without perl_Alien_Build_enables_optional_test}
+# Exhibit FFI::Platypus in Test::Alien
+%if !%{defined perl_bootstrap}
+# Build cycle: perl-FFI-Platypus → perl-Alien-Build
+%{bcond_without perl_Alien_Build_enables_platypus}
+%endif
 
 Name:           perl-Alien-Build
 Version:        1.60
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -52,7 +57,6 @@ BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::CBuilder)
 BuildRequires:  perl(ExtUtils::ParseXS) >= 3.30
 BuildRequires:  perl(FFI::CheckLib)
-# FFI::Platypus is optional and not packaged
 BuildRequires:  perl(File::Basename)
 BuildRequires:  perl(File::BOM)
 BuildRequires:  perl(File::chdir)
@@ -76,6 +80,10 @@ BuildRequires:  perl(Test2::API) >= 1.302015
 BuildRequires:  perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 BuildRequires:  perl(YAML)
+# Optional run-time:
+%if %{with perl_Alien_Build_enables_platypus}
+BuildRequires:  perl(FFI::Platypus) >= 0.12
+%endif
 # Tests:
 # AnyEvent not used
 # AnyEvent::FTP::Server not used
@@ -133,6 +141,9 @@ Requires:       perl(DynaLoader)
 Requires:       perl(ExtUtils::CBuilder)
 Requires:       perl(ExtUtils::ParseXS) >= 3.30
 Requires:       perl(FFI::CheckLib)
+%if %{with perl_Alien_Build_enables_platypus}
+Recommends:     perl(FFI::Platypus) >= 0.12
+%endif
 Requires:       perl(File::BOM)
 Requires:       perl(File::Find)
 Requires:       perl(Path::Tiny) >= 0.077
@@ -190,6 +201,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Mar 13 2019 Petr Pisar <ppisar@redhat.com> - 1.60-2
+- Use now-packaged FFI::Platypus
+
 * Fri Mar 01 2019 Petr Pisar <ppisar@redhat.com> - 1.60-1
 - 1.60 bump
 
