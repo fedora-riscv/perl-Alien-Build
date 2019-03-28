@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.60
-Release:        2%{?dist}
+Version:        1.62
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -32,6 +32,8 @@ BuildRequires:  perl(:VERSION) >= 5.8.1
 BuildRequires:  perl(ExtUtils::CBuilder)
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
 BuildRequires:  perl(ExtUtils::ParseXS)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(File::Which) >= 1.10
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
@@ -62,7 +64,6 @@ BuildRequires:  perl(File::BOM)
 BuildRequires:  perl(File::chdir)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Find)
-BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(JSON::PP)
 BuildRequires:  perl(Module::Load)
 BuildRequires:  perl(overload)
@@ -201,6 +202,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Mar 28 2019 Petr Pisar <ppisar@redhat.com> - 1.62-1
+- 1.62 bump
+
 * Wed Mar 13 2019 Petr Pisar <ppisar@redhat.com> - 1.60-2
 - Use now-packaged FFI::Platypus
 
