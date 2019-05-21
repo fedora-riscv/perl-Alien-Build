@@ -7,14 +7,12 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.69
+Version:        1.73
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
 # object file and a static library).
-# testalienMC_9y is a unused garbage
-# <https://github.com/Perl5-Alien/Alien-Build/issues/70>
 License:        GPL+ or Artistic
 URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
@@ -88,6 +86,7 @@ BuildRequires:  perl(FFI::Platypus) >= 0.12
 # Tests:
 # AnyEvent not used
 # AnyEvent::FTP::Server not used
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(File::Glob)
 # Getopt::Long not used
 # IO::Socket::INET not used
@@ -116,9 +115,14 @@ BuildRequires:  perl(Env::ShellWords)
 # FFI::Platypus not packaged
 # HTTP::Tiny or curl
 BuildRequires:  perl(HTTP::Tiny) >= 0.044
+# Prefer Mojo::DOM with Mojolicious, URI, URI::Escape over Mojo::DOM58
+BuildRequires:  perl(Mojo::DOM)
+BuildRequires:  perl(Mojolicious) >= 7.00
 # PkgConfig not packaged
 BuildRequires:  perl(Readonly) >= 1.60
 BuildRequires:  perl(Sort::Versions)
+BuildRequires:  perl(URI)
+BuildRequires:  perl(URI::Escape)
 BuildRequires:  perl(URI::file)
 %endif
 # make in the lib/Alien/Build/Plugin/Build/CMake.pm plugin
@@ -169,11 +173,28 @@ Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
 
 # Remove underspecified dependencies
 %global __requires_exclude %{?__requires_exclude:%{__requires_exclude}|}^perl\\((Capture::Tiny|Path::Tiny|Test2::API|Text::ParseWords)\\)$
+# Remove private redefinitions
+%global __provides_exclude %{?__provides_exclude:%{__provides_exclude}|}^perl\\(MY\\)
 
 %description
 This package provides tools for building external (non-CPAN) dependencies
 for CPAN. It is mainly designed to be used at install time of a CPAN
 client, and work closely with Alien::Base which is used at run time.
+
+%package Plugin-Decode-Mojo
+Summary:        Alien::Build plugin to extract links from HTML
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+# Prefer Mojo::DOM with Mojolicious >= 7.00 over Mojo::DOM58 that is not yet
+# packaged.
+Requires:       perl(Mojo::DOM)
+Requires:       perl(Mojolicious) >= 7.00
+Requires:       perl(URI)
+Requires:       perl(URI::Escape)
+
+%description Plugin-Decode-Mojo
+This Alien::Build plugin decodes an HTML file listing into a list of
+candidates for your Prefer plugin.
 
 %prep
 %setup -q -n Alien-Build-%{version}
@@ -198,11 +219,22 @@ make test
 
 %files
 %license LICENSE
-%doc Changes* example README SUPPORT
+%doc Changes Changes.Alien-Base Changes.Alien-Base-Wrapper Changes.Test-Alien
+%doc example README SUPPORT
 %{perl_vendorlib}/*
+%exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/Mojo.pm
 %{_mandir}/man3/*
+%exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
+
+%files Plugin-Decode-Mojo
+%doc Changes.Alien-Build-Decode-Mojo
+%{perl_vendorlib}/Alien/Build/Plugin/Decode/Mojo.pm
+%{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Tue May 21 2019 Petr Pisar <ppisar@redhat.com> - 1.73-1
+- 1.73 bump
+
 * Mon Apr 29 2019 Petr Pisar <ppisar@redhat.com> - 1.69-1
 - 1.69 bump
 
