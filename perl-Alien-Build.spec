@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.74
-Release:        3%{?dist}
+Version:        1.76
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -137,6 +137,10 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
 Requires:       perl(Alien::cmake3) >= 0.02
 %endif
+# Alien::Build::Plugin::Download::Negotiate defaults to Decode::Mojo instead
+# of Decode::HTML
+Suggests:       perl(Alien::Build::Plugin::Decode::HTML)
+Requires:       perl(Alien::Build::Plugin::Decode::Mojo)
 # Archive::Tar or (tar and bzip2 and gzip and xz)
 Requires:       perl(Archive::Tar)
 # Archive::Zip or unzip
@@ -181,6 +185,20 @@ This package provides tools for building external (non-CPAN) dependencies
 for CPAN. It is mainly designed to be used at install time of a CPAN
 client, and work closely with Alien::Base which is used at run time.
 
+%package Plugin-Decode-HTML
+Summary:        Alien::Build plugin to extract links from HTML
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(HTML::LinkExtor)
+Requires:       perl(URI)
+Requires:       perl(URI::Escape)
+# Subpackaged from perl-Alien-Build-1.76
+Conflicts:      perl-Alien-Build < 1.76
+
+%description Plugin-Decode-HTML
+This Alien::Build plugin decodes an HTML file listing into a list of
+candidates for your Prefer plugin.
+
 %package Plugin-Decode-Mojo
 Summary:        Alien::Build plugin to extract links from HTML
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -222,9 +240,15 @@ make test
 %doc Changes Changes.Alien-Base Changes.Alien-Base-Wrapper Changes.Test-Alien
 %doc example README SUPPORT
 %{perl_vendorlib}/*
+%exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/HTML.pm
 %exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/Mojo.pm
 %{_mandir}/man3/*
+%exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::HTML.3pm.*
 %exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
+
+%files Plugin-Decode-HTML
+%{perl_vendorlib}/Alien/Build/Plugin/Decode/HTML.pm
+%{_mandir}/man3/Alien::Build::Plugin::Decode::HTML.3pm.*
 
 %files Plugin-Decode-Mojo
 %doc Changes.Alien-Build-Decode-Mojo
@@ -232,6 +256,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Mon Jun 24 2019 Petr Pisar <ppisar@redhat.com> - 1.76-1
+- 1.76 bump
+
 * Sun Jun 02 2019 Jitka Plesnikova <jplesnik@redhat.com> - 1.74-3
 - Perl 5.30 re-rebuild of bootstrapped packages
 
