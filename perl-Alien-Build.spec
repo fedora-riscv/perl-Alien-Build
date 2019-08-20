@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.79
+Version:        1.83
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -18,7 +18,7 @@ URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.55-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-1.83-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 # Makefile.PL executes ./inc/probebad.pl that executes XS checks
@@ -63,6 +63,7 @@ BuildRequires:  perl(File::chdir)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Find)
 BuildRequires:  perl(JSON::PP)
+# List::Util 1.33 not used at tests
 BuildRequires:  perl(Module::Load)
 BuildRequires:  perl(overload)
 BuildRequires:  perl(Path::Tiny) >= 0.077
@@ -75,6 +76,7 @@ BuildRequires:  perl(PkgConfig::LibPkgConf::Client) >= 0.04
 BuildRequires:  perl(PkgConfig::LibPkgConf::Util) >= 0.04
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Storable)
+BuildRequires:  perl(Term::ANSIColor)
 BuildRequires:  perl(Test2::API) >= 1.302015
 BuildRequires:  perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
@@ -179,7 +181,7 @@ Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
 # Remove underspecified dependencies
 %global __requires_exclude %{?__requires_exclude:%{__requires_exclude}|}^perl\\((Capture::Tiny|Path::Tiny|Test2::API|Text::ParseWords)\\)$
 # Remove private redefinitions
-%global __provides_exclude %{?__provides_exclude:%{__provides_exclude}|}^perl\\(MY\\)
+%global __provides_exclude %{?__provides_exclude:%{__provides_exclude}|}^perl\\((MY|Alien::Build::rc)\\)$
 
 %description
 This package provides tools for building external (non-CPAN) dependencies
@@ -225,6 +227,7 @@ rm lib/Alien/Build/Plugin/PkgConfig/{CommandLine,PP}.pm
 rm t/alien_build_plugin_pkgconfig_{commandline,pp}.t
 
 %build
+unset PKG_CONFIG
 perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1 NO_PERLLOCAL=1
 %{make_build}
 
@@ -233,7 +236,11 @@ perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1 NO_PERLLOCAL=1
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-unset ALIEN_BUILD_LIVE_TEST
+unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
+    ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
+    ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
+    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CONFIG_SITE CURL DESTDIR \
+    FOO1 FOO2 FOO3 VERBOSE WGET
 make test
 
 %files
@@ -257,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Tue Aug 20 2019 Petr Pisar <ppisar@redhat.com> - 1.83-1
+- 1.83 bump
+
 * Mon Aug 19 2019 Petr Pisar <ppisar@redhat.com> - 1.79-1
 - 1.79 bump
 
