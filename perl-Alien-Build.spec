@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.86
+Version:        1.89
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -93,7 +93,7 @@ BuildRequires:  perl(File::Glob)
 # Getopt::Long not used
 # IO::Socket::INET not used
 BuildRequires:  perl(lib)
-BuildRequires:  perl(List::Util)
+BuildRequires:  perl(List::Util) >= 1.33
 # Mojo::JSON not used
 # Mojo::URL not used
 # Mojolicious::Lite not used
@@ -264,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Thu Sep 26 2019 Petr Pisar <ppisar@redhat.com> - 1.89-1
+- 1.89 bump
+
 * Fri Sep 13 2019 Petr Pisar <ppisar@redhat.com> - 1.86-1
 - 1.86 bump
 
