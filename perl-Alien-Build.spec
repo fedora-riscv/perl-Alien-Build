@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.91
+Version:        1.92
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -77,7 +77,7 @@ BuildRequires:  perl(PkgConfig::LibPkgConf::Util) >= 0.04
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Storable)
 BuildRequires:  perl(Term::ANSIColor)
-BuildRequires:  perl(Test2::API) >= 1.302015
+BuildRequires:  perl(Test2::API) >= 1.302096
 BuildRequires:  perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 BuildRequires:  perl(YAML)
@@ -167,7 +167,7 @@ Requires:       perl(Path::Tiny) >= 0.077
 Requires:       perl(PkgConfig::LibPkgConf::Client) >= 0.04
 Requires:       perl(PkgConfig::LibPkgConf::Util) >= 0.04
 Requires:       perl(Storable)
-Requires:       perl(Test2::API) >= 1.302015
+Requires:       perl(Test2::API) >= 1.302096
 Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 Requires:       perl(YAML)
@@ -264,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Mon Nov 04 2019 Petr Pisar <ppisar@redhat.com> - 1.92-1
+- 1.92 bump
+
 * Mon Nov 04 2019 Petr Pisar <ppisar@redhat.com> - 1.91-1
 - 1.91 bump
 
