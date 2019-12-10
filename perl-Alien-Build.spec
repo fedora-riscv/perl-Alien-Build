@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.92
+Version:        1.93
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -239,7 +239,7 @@ perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1 NO_PERLLOCAL=1
 unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
     ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
-    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CONFIG_SITE CURL DESTDIR \
+    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
     FOO1 FOO2 FOO3 VERBOSE WGET
 make test
 
@@ -264,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Tue Dec 10 2019 Petr Pisar <ppisar@redhat.com> - 1.93-1
+- 1.93 bump
+
 * Mon Nov 04 2019 Petr Pisar <ppisar@redhat.com> - 1.92-1
 - 1.92 bump
 
