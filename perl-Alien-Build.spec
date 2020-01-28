@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.94
+Version:        1.96
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -18,7 +18,7 @@ URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.83-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-1.96-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
 BuildRequires:  make
 # Makefile.PL executes ./inc/probebad.pl that executes XS checks
@@ -64,7 +64,6 @@ BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Find)
 BuildRequires:  perl(JSON::PP)
 # List::Util 1.33 not used at tests
-BuildRequires:  perl(Module::Load)
 BuildRequires:  perl(overload)
 BuildRequires:  perl(Path::Tiny) >= 0.077
 # Alien::Build::Plugin::PkgConfig::Negotiate finds a pkgconfig implementation
@@ -99,9 +98,6 @@ BuildRequires:  perl(List::Util) >= 1.33
 # Mojolicious::Lite not used
 BuildRequires:  perl(Net::FTP)
 # Proc::Daemon not used
-BuildRequires:  perl(Test2::Mock) >= 0.000060
-BuildRequires:  perl(Test2::Require) >= 0.000060
-BuildRequires:  perl(Test2::Require::Module) >= 0.000060
 BuildRequires:  perl(Test2::V0) >= 0.000060
 # URI not used
 BuildRequires:  perl(utf8)
@@ -264,6 +260,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Tue Jan 28 2020 Petr Pisar <ppisar@redhat.com> - 1.96-1
+- 1.96 bump
+
 * Tue Dec 17 2019 Jitka Plesnikova <jplesnik@redhat.com> - 1.94-1
 - 1.94 bump
 
