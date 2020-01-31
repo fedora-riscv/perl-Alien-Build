@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        1.96
+Version:        1.98
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -147,6 +147,7 @@ Requires:       perl(Archive::Zip)
 Requires:       perl(Config::INI::Reader::Multiline)
 Requires:       perl(DynaLoader)
 Requires:       perl(ExtUtils::CBuilder)
+Requires:       perl(ExtUtils::MakeMaker) >= 6.52
 Requires:       perl(ExtUtils::ParseXS) >= 3.30
 Requires:       perl(FFI::CheckLib)
 %if %{with perl_Alien_Build_enables_platypus}
@@ -260,6 +261,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Fri Jan 31 2020 Petr Pisar <ppisar@redhat.com> - 1.98-1
+- 1.98 bump
+
 * Tue Jan 28 2020 Petr Pisar <ppisar@redhat.com> - 1.96-1
 - 1.96 bump
 
