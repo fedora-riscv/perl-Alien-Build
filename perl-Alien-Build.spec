@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.17
+Version:        2.19
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -37,6 +37,8 @@ BuildRequires:  perl(File::Which) >= 1.10
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 # Run-time:
+# Alien::Build::Plugin::Build::Copy executes cp
+BuildRequires:  coreutils
 %if !%{defined perl_bootstrap}
 # t/alien_build_plugin_build_cmake.t executes gcc via cmake (bug #923024)
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -128,6 +130,8 @@ BuildRequires:  perl(URI::file)
 # make in the lib/Alien/Build/Plugin/Build/Make.pm plugin
 # make or Alien::gmake
 BuildRequires:  make
+# Alien::Build::Plugin::Build::Copy executes cp
+Requires:       coreutils
 Suggests:       curl
 # Alien::Base::Wrapper::cc() executes $Config{cc}.
 Requires:       gcc
@@ -261,6 +265,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Thu Apr 09 2020 Petr Pisar <ppisar@redhat.com> - 2.19-1
+- 2.19 bump
+
 * Fri Mar 20 2020 Petr Pisar <ppisar@redhat.com> - 2.17-1
 - 2.17 bump
 
