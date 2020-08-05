@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.26
-Release:        4%{?dist}
+Version:        2.28
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -18,15 +18,16 @@ URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-1.96-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-2.28-Remove-redundant-pkgconfig-implementations.patch
 BuildArch:      noarch
+BuildRequires:  coreutils
 BuildRequires:  make
 # Makefile.PL executes ./inc/probebad.pl that executes XS checks
 BuildRequires:  gcc
 BuildRequires:  perl-devel
 BuildRequires:  perl-generators
 BuildRequires:  perl-interpreter
-BuildRequires:  perl(:VERSION) >= 5.8.1
+BuildRequires:  perl(:VERSION) >= 5.8.4
 BuildRequires:  perl(Config)
 BuildRequires:  perl(ExtUtils::CBuilder)
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
@@ -37,8 +38,6 @@ BuildRequires:  perl(File::Which) >= 1.10
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
 # Run-time:
-# Alien::Build::Plugin::Build::Copy executes cp
-BuildRequires:  coreutils
 %if !%{defined perl_bootstrap}
 # t/alien_build_plugin_build_cmake.t executes gcc via cmake (bug #923024)
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -265,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Wed Aug 05 2020 Petr Pisar <ppisar@redhat.com> - 2.28-1
+- 2.28 bump
+
 * Tue Jul 28 2020 Fedora Release Engineering <releng@fedoraproject.org> - 2.26-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
