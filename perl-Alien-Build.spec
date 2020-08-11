@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.28
+Version:        2.29
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -64,7 +64,7 @@ BuildRequires:  perl(File::chdir)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Find)
 BuildRequires:  perl(JSON::PP)
-# List::Util 1.33 not used at tests
+BuildRequires:  perl(List::Util) >= 1.33
 BuildRequires:  perl(overload)
 BuildRequires:  perl(Path::Tiny) >= 0.077
 # Alien::Build::Plugin::PkgConfig::Negotiate finds a pkgconfig implementation
@@ -264,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Tue Aug 11 2020 Petr Pisar <ppisar@redhat.com> - 2.29-1
+- 2.29 bump
+
 * Wed Aug 05 2020 Petr Pisar <ppisar@redhat.com> - 2.28-1
 - 2.28 bump
 
