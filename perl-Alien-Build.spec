@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.32
+Version:        2.33
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -264,6 +264,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Mon Sep 21 2020 Petr Pisar <ppisar@redhat.com> - 2.33-1
+- 2.33 bump
+
 * Mon Sep 14 2020 Petr Pisar <ppisar@redhat.com> - 2.32-1
 - 2.32 bump
 
