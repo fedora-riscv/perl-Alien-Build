@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.33
+Version:        2.37
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -52,6 +52,8 @@ BuildRequires:  perl(Capture::Tiny) >= 0.17
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config::INI::Reader::Multiline)
 BuildRequires:  perl(constant)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Digest::SHA)
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Env)
 BuildRequires:  perl(Exporter)
@@ -88,7 +90,6 @@ BuildRequires:  perl(FFI::Platypus) >= 0.12
 # Tests:
 # AnyEvent not used
 # AnyEvent::FTP::Server not used
-BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(File::Glob)
 # Getopt::Long not used
 # IO::Socket::INET not used
@@ -170,7 +171,7 @@ Requires:       perl(Storable)
 Requires:       perl(Test2::API) >= 1.302096
 Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
-Requires:       perl(YAML)
+Suggests:       perl(YAML)
 Suggests:       wget
 # Alien::Base::PkgConfig moved from perl-Alien-Base-ModuleBuild
 Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
@@ -264,6 +265,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Tue Nov 03 2020 Petr Pisar <ppisar@redhat.com> - 2.37-1
+- 2.37 bump
+
 * Mon Sep 21 2020 Petr Pisar <ppisar@redhat.com> - 2.33-1
 - 2.33 bump
 
