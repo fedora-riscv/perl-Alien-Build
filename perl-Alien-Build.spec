@@ -127,15 +127,15 @@ BuildRequires:  perl(URI)
 BuildRequires:  perl(URI::Escape)
 BuildRequires:  perl(URI::file)
 %endif
-# make in the lib/Alien/Build/Plugin/Build/CMake.pm plugin
-# make in the lib/Alien/Build/Plugin/Build/Make.pm plugin
-# make or Alien::gmake
-BuildRequires:  make
 # Alien::Build::Plugin::Build::Copy executes cp
 Requires:       coreutils
 Suggests:       curl
 # Alien::Base::Wrapper::cc() executes $Config{cc}.
 Requires:       gcc
+# make in the lib/Alien/Build/Plugin/Build/CMake.pm plugin
+# make in the lib/Alien/Build/Plugin/Build/Make.pm plugin
+# make or Alien::gmake
+Requires:       make
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %if !%{defined perl_bootstrap}
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -184,9 +184,16 @@ Provides:       perl-Test-Alien = %{version}-%{release}
 %{?perl_default_filter}
 
 # Remove underspecified dependencies
-%global __requires_exclude %{?__requires_exclude:%{__requires_exclude}|}^perl\\((Capture::Tiny|Path::Tiny|Test2::API|Text::ParseWords)\\)$
+%global __requires_exclude %{?__requires_exclude:%{__requires_exclude}|}^perl\\((Capture::Tiny|Path::Tiny|Test2::API|Test2::V0|Text::ParseWords)\\)$
 # Remove private redefinitions
 %global __provides_exclude %{?__provides_exclude:%{__provides_exclude}|}^perl\\(Alien::Build::rc\\)$
+# Remove private modules
+%global __provides_exclude %{__provides_exclude}|^perl\\(MyTest::.*\\)$
+%global __requires_exclude %{__requires_exclude}|^perl\\(Alien::Build::Plugin::RogerRamjet|Alien::Foo|Alien::libfoo1|Alien::libfoo2|MyTest::.*\\)$
+
+# Some tests, e.g. t/alien_build_plugin_extract_negotiate.t, compare a script file
+# content against an archived one. Do not rewrite their shebangs.
+%global __brp_mangle_shebangs_exclude_from %{?__brp_mangle_shebangs_exclude_from:%{__brp_mangle_shebangs_exclude_from}|}^%{_libexecdir}/%{name}/corpus/dist/foo-1\.00/configure$
 
 %description
 This package provides tools for building external (non-CPAN) dependencies
@@ -222,6 +229,38 @@ Requires:       perl(URI::Escape)
 This Alien::Build plugin decodes an HTML file listing into a list of
 candidates for your Prefer plugin.
 
+%package tests
+Summary:        Tests for %{name}
+Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:       coreutils
+Requires:       perl-Test-Harness
+Requires:       perl(Net::FTP)
+Requires:       perl(Test2::V0) >= 0.000060
+%if %{with perl_Alien_Build_enables_optional_test}
+%if !%{defined perl_bootstrap}
+# Break build cycle: Acme::Alien::DontPanic → Test::Alien
+Requires:       perl(Acme::Alien::DontPanic) >= 0.026
+# Break build cycle: perl-Alien-Base-ModuleBuild → perl-Alien-Build
+Requires:       perl(Alien::Base::ModuleBuild) >= 0.040
+%endif
+Requires:       perl(Devel::Hide)
+Requires:       perl(Env::ShellWords)
+# FFI::Platypus not packaged
+# HTTP::Tiny or curl
+Requires:       perl(HTTP::Tiny) >= 0.044
+# Prefer Mojo::DOM with Mojolicious, URI, URI::Escape over Mojo::DOM58
+Requires:       perl(Mojo::DOM)
+Requires:       perl(Mojolicious) >= 7.00
+# PkgConfig not packaged
+Requires:       perl(Readonly) >= 1.60
+Requires:       perl(Sort::Versions)
+Requires:       perl(URI::file)
+%endif
+
+%description tests
+Tests from %{name}. Execute them
+with "%{_libexecdir}/%{name}/test".
+
 %prep
 %setup -q -n Alien-Build-%{version}
 # Remove redundant pkgconfig implementations, keep
@@ -230,6 +269,29 @@ candidates for your Prefer plugin.
 %patch0 -p1
 rm lib/Alien/Build/Plugin/PkgConfig/{CommandLine,PP}.pm 
 rm t/alien_build_plugin_pkgconfig_{commandline,pp}.t
+# Remove unused tests
+for F in \
+    t/bin/ftpd \
+    t/bin/httpd \
+%if !%{with perl_Alien_Build_enables_optional_test} || %{defined perl_bootstrap}
+    t/alien_base__system_installed.t \
+%endif
+%if !%{with perl_Alien_Build_enables_optional_test}
+    t/alien_build_plugin_build_searchdep.t \
+    t/alien_build_plugin_extract_commandline__tar_can.t \
+    t/alien_build_plugin_prefer_badversion.t \
+    t/alien_build_plugin_prefer_goodversion.t \
+%endif
+; do
+    rm "$F"
+    perl -i -ne 'print $_ unless m{\A\Q'"$F"'\E\b}' MANIFEST
+    perl -i -ne 'print $_ unless m{\b\Q'"$F"'\E\b}' t/01_use.t
+done
+# Help generators to recognize Perl scripts
+for F in t/*.t; do
+    perl -i -MConfig -ple 'print $Config{startperl} if $. == 1 && !s{\A#!\s*perl}{$Config{startperl}}' "$F"
+    chmod +x "$F"
+done
 
 %build
 unset PKG_CONFIG
@@ -238,7 +300,30 @@ perl Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1 NO_PERLLOCAL=1
 
 %install
 %{make_install}
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} %{buildroot}/*
+# Install tests
+mkdir -p %{buildroot}%{_libexecdir}/%{name}
+cp -a corpus t %{buildroot}%{_libexecdir}/%{name}
+# t/alienfile.t uses example/*.alienfile
+mkdir %{buildroot}%{_libexecdir}/%{name}/example
+cp -a example/*.alienfile %{buildroot}%{_libexecdir}/%{name}/example
+cat > %{buildroot}%{_libexecdir}/%{name}/test << 'EOF'
+#!/bin/bash
+set -e
+# Many tests, e.g. t/alien_build_commandsequence.t, write into CWD
+DIR=$(mktemp -d)
+cp -a %{_libexecdir}/%{name}/* "$DIR"
+pushd "$DIR"
+unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
+    ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
+    ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
+    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
+    FOO1 FOO2 FOO3 VERBOSE WGET
+prove -I . -j "$(getconf _NPROCESSORS_ONLN)"
+popd
+rm -r "$DIR"
+EOF
+chmod +x %{buildroot}%{_libexecdir}/%{name}/test
 
 %check
 unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
@@ -246,6 +331,7 @@ unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
     ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
     FOO1 FOO2 FOO3 VERBOSE WGET
+export HARNESS_OPTIONS=j$(perl -e 'if ($ARGV[0] =~ /.*-j([0-9][0-9]*).*/) {print $1} else {print 1}' -- '%{?_smp_mflags}')
 make test
 
 %files
@@ -268,9 +354,13 @@ make test
 %{perl_vendorlib}/Alien/Build/Plugin/Decode/Mojo.pm
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
+%files tests
+%{_libexecdir}/%{name}
+
 %changelog
 * Thu May 13 2021 Petr Pisar <ppisar@redhat.com> - 2.40-1
 - 2.40 bump
+- Package the tests
 
 * Tue Jan 12 2021 Petr Pisar <ppisar@redhat.com> - 2.38-2
 - Test-Alien merged into Alien-Build
