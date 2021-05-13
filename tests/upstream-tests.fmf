@@ -1,0 +1,4 @@
+summary: Upstream tests
+component: perl-Alien-Build
+require: perl-Alien-Build-tests
+test: /usr/libexec/perl-Alien-Build/test
