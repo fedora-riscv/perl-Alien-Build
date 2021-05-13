@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.38
-Release:        3%{?dist}
+Version:        2.40
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -93,15 +93,16 @@ BuildRequires:  perl(FFI::Platypus) >= 0.12
 BuildRequires:  perl(File::Glob)
 # Getopt::Long not used
 # IO::Socket::INET not used
+# HTTP::Server::PSGI not used
 BuildRequires:  perl(lib)
 BuildRequires:  perl(List::Util) >= 1.33
-# Mojo::JSON not used
-# Mojo::URL not used
-# Mojolicious::Lite not used
 BuildRequires:  perl(Net::FTP)
+# Plack::App::Directory not used
+# Plack::Builder not used
 # Proc::Daemon not used
 BuildRequires:  perl(Test2::V0) >= 0.000060
 # URI not used
+# URI::Escape not used
 BuildRequires:  perl(utf8)
 %if %{with perl_Alien_Build_enables_optional_test}
 # Optional tests:
@@ -268,6 +269,9 @@ make test
 %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
 
 %changelog
+* Thu May 13 2021 Petr Pisar <ppisar@redhat.com> - 2.40-1
+- 2.40 bump
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 2.38-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
