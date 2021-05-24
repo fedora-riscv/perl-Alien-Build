@@ -8,7 +8,7 @@
 
 Name:           perl-Alien-Build
 Version:        2.40
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -358,6 +358,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Mon May 24 2021 Jitka Plesnikova <jplesnik@redhat.com> - 2.40-3
+- Perl 5.34 re-rebuild of bootstrapped packages
+
 * Fri May 21 2021 Jitka Plesnikova <jplesnik@redhat.com> - 2.40-2
 - Perl 5.34 rebuild
 
