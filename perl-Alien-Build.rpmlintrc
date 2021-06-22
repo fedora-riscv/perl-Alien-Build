@@ -1,5 +1,5 @@
-from Config import *
-addFilter("-tests\.noarch: W: no-documentation")
-addFilter("-tests\.noarch: W: devel-file-in-non-devel-package")
-addFilter("-tests\.noarch: W: hidden-file-or-dir /usr/libexec/")
-addFilter("-tests\.noarch: E: zero-length /usr/libexec/")
+addFilter('-tests\.noarch: E: invalid-pkgconfig-file /usr/libexec/')
+addFilter('-tests\.noarch: E: zero-length /usr/libexec/')
+addFilter('-tests\.noarch: W: devel-file-in-non-devel-package')
+addFilter('-tests\.noarch: W: hidden-file-or-dir /usr/libexec/')
+addFilter('-tests\.noarch: W: no-documentation')

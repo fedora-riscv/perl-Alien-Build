@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.40
-Release:        3%{?dist}
+Version:        2.41
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -47,7 +47,6 @@ BuildRequires:  perl(Alien::cmake3) >= 0.02
 BuildRequires:  perl(Archive::Tar)
 # Archive::Zip or unzip
 BuildRequires:  perl(Archive::Zip)
-BuildRequires:  perl(base)
 BuildRequires:  perl(Capture::Tiny) >= 0.17
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config::INI::Reader::Multiline)
@@ -68,6 +67,7 @@ BuildRequires:  perl(File::Find)
 BuildRequires:  perl(JSON::PP)
 BuildRequires:  perl(List::Util) >= 1.33
 BuildRequires:  perl(overload)
+BuildRequires:  perl(parent)
 BuildRequires:  perl(Path::Tiny) >= 0.077
 # Alien::Build::Plugin::PkgConfig::Negotiate finds a pkgconfig implementation
 # in this order:
@@ -100,7 +100,7 @@ BuildRequires:  perl(Net::FTP)
 # Plack::App::Directory not used
 # Plack::Builder not used
 # Proc::Daemon not used
-BuildRequires:  perl(Test2::V0) >= 0.000060
+BuildRequires:  perl(Test2::V0) >= 0.000121
 # URI not used
 # URI::Escape not used
 BuildRequires:  perl(utf8)
@@ -235,7 +235,7 @@ Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:       coreutils
 Requires:       perl-Test-Harness
 Requires:       perl(Net::FTP)
-Requires:       perl(Test2::V0) >= 0.000060
+Requires:       perl(Test2::V0) >= 0.000121
 %if %{with perl_Alien_Build_enables_optional_test}
 %if !%{defined perl_bootstrap}
 # Break build cycle: Acme::Alien::DontPanic → Test::Alien
@@ -358,6 +358,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Tue Jun 22 2021 Petr Pisar <ppisar@redhat.com> - 2.41-1
+- 2.41 bump
+
 * Mon May 24 2021 Jitka Plesnikova <jplesnik@redhat.com> - 2.40-3
 - Perl 5.34 re-rebuild of bootstrapped packages
 
