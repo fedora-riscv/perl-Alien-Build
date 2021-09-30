@@ -287,6 +287,27 @@ for F in \
     perl -i -ne 'print $_ unless m{\A\Q'"$F"'\E\b}' MANIFEST
     perl -i -ne 'print $_ unless m{\b\Q'"$F"'\E\b}' t/01_use.t
 done
+# Symlink identical files
+function symlink_duplicates {
+    local KEEP="$1"
+    local DUPLICATE_GLOB="$2"
+    local F
+    shopt -s globstar
+    for F in $DUPLICATE_GLOB; do
+        test "$KEEP" = "$F" && continue
+        cmp "$KEEP" "$F" || continue
+        rm "$F"
+        ln -s "$(realpath --relative-to $(dirname $F) $KEEP)" "$F"
+    done
+}
+symlink_duplicates 'corpus/alien_build_plugin_fetch_curlcommand/dir/foo-1.00.tar' 'corpus/*/dir/foo-1.00.tar'
+symlink_duplicates 'corpus/alien_build_plugin_fetch_curlcommand/dir/foo-1.01.tar' 'corpus/*/dir/foo-1.01.tar'
+symlink_duplicates 'corpus/alien_build_plugin_fetch_curlcommand/dir/foo-1.02.tar' 'corpus/*/dir/foo-1.02.tar'
+symlink_duplicates 'corpus/alien_build_plugin_fetch_curlcommand/dir/html_test.html' 'corpus/*/dir/html_test.html'
+symlink_duplicates 'example/user/ffi-platypus/t/lzma_example.t' 'example/user/*/t/lzma_example.t'
+symlink_duplicates 'example/user/xs-dzil/Example.xs' 'example/**/Example.xs'
+symlink_duplicates 'example/user/xs-dzil/lib/LZMA/Example.pm' 'example/**/Example.pm'
+symlink_duplicates 't/alien_build_plugin_decode_dirlisting.t' 't/alien_build_plugin_decode_dirlistingftpcopy.t'
 # Help generators to recognize Perl scripts
 for F in t/*.t; do
     perl -i -MConfig -ple 'print $Config{startperl} if $. == 1 && !s{\A#!\s*perl}{$Config{startperl}}' "$F"
