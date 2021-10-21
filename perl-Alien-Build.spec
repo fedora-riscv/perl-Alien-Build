@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.42
+Version:        2.44
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -307,7 +307,6 @@ symlink_duplicates 'corpus/alien_build_plugin_fetch_curlcommand/dir/html_test.ht
 symlink_duplicates 'example/user/ffi-platypus/t/lzma_example.t' 'example/user/*/t/lzma_example.t'
 symlink_duplicates 'example/user/xs-dzil/Example.xs' 'example/**/Example.xs'
 symlink_duplicates 'example/user/xs-dzil/lib/LZMA/Example.pm' 'example/**/Example.pm'
-symlink_duplicates 't/alien_build_plugin_decode_dirlisting.t' 't/alien_build_plugin_decode_dirlistingftpcopy.t'
 # Help generators to recognize Perl scripts
 for F in t/*.t; do
     perl -i -MConfig -ple 'print $Config{startperl} if $. == 1 && !s{\A#!\s*perl}{$Config{startperl}}' "$F"
@@ -379,6 +378,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Thu Oct 21 2021 Petr Pisar <ppisar@redhat.com> - 2.44-1
+- 2.44 bump
+
 * Thu Sep 30 2021 Petr Pisar <ppisar@redhat.com> - 2.42-1
 - 2.42 bump
 
