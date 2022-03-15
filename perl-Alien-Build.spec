@@ -7,8 +7,8 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.47
-Release:        2%{?dist}
+Version:        2.48
+Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -386,11 +386,13 @@ make test
 %exclude %{perl_vendorlib}/Alien/Base/PkgConfig.pm
 %exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/HTML.pm
 %exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/Mojo.pm
+%exclude %{perl_vendorlib}/Alien/Util.pm
 %{_mandir}/man3/*
 %exclude %{_mandir}/man3/Alien::Base.3pm.*
 %exclude %{_mandir}/man3/Alien::Base::PkgConfig.3pm.*
 %exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::HTML.3pm.*
 %exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
+%exclude %{_mandir}/man3/Alien::Util.3pm.*
 
 %files -n perl-Alien-Base
 %license LICENSE
@@ -400,8 +402,10 @@ make test
 %{perl_vendorlib}/Alien/Base.pm
 %dir %{perl_vendorlib}/Alien/Base
 %{perl_vendorlib}/Alien/Base/PkgConfig.pm
+%{perl_vendorlib}/Alien/Util.pm
 %{_mandir}/man3/Alien::Base.3pm.*
 %{_mandir}/man3/Alien::Base::PkgConfig.3pm.*
+%{_mandir}/man3/Alien::Util.3pm.*
 
 %files Plugin-Decode-HTML
 %{perl_vendorlib}/Alien/Build/Plugin/Decode/HTML.pm
@@ -416,6 +420,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Tue Mar 15 2022 Petr Pisar <ppisar@redhat.com> - 2.48-1
+- 2.48 bump
+
 * Fri Mar 11 2022 Petr Pisar <ppisar@redhat.com> - 2.47-2
 - Move Alien::Base and Alien::Base::PkgConfig to perl-Alien-Base (bug #2063125)
 
