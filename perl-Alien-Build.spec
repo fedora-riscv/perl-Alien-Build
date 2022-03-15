@@ -8,7 +8,7 @@
 
 Name:           perl-Alien-Build
 Version:        2.47
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -136,6 +136,9 @@ Requires:       gcc
 # make in the lib/Alien/Build/Plugin/Build/Make.pm plugin
 # make or Alien::gmake
 Requires:       make
+# A subset of Alien-Build modules is packaged in perl-Alien-Base to minimize
+# dependencies.
+Requires:       perl-Alien-Base = %{?epoch:%{epoch}:}%{version}-%{release}
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %if !%{defined perl_bootstrap}
 # Build cycle: perl-Alien-cmake3 → perl-Alien-Build
@@ -150,14 +153,13 @@ Requires:       perl(Archive::Tar)
 # Archive::Zip or unzip
 Requires:       perl(Archive::Zip)
 Requires:       perl(Config::INI::Reader::Multiline)
-Requires:       perl(DynaLoader)
 Requires:       perl(ExtUtils::CBuilder)
 Requires:       perl(ExtUtils::MakeMaker) >= 6.52
 Requires:       perl(ExtUtils::ParseXS) >= 3.30
-Requires:       perl(FFI::CheckLib)
 %if %{with perl_Alien_Build_enables_platypus}
 Recommends:     perl(FFI::Platypus) >= 0.12
 %endif
+Requires:       perl(Capture::Tiny) >= 0.17
 Requires:       perl(File::BOM)
 Requires:       perl(File::Find)
 Requires:       perl(Path::Tiny) >= 0.077
@@ -174,8 +176,6 @@ Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
 Suggests:       perl(YAML)
 Suggests:       wget
-# Alien::Base::PkgConfig moved from perl-Alien-Base-ModuleBuild
-Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
 # Test-Alien merged into Alien-Build
 Obsoletes:      perl-Test-Alien < 0.15-13
 Provides:       perl-Test-Alien = %{version}-%{release}
@@ -199,6 +199,28 @@ Provides:       perl-Test-Alien = %{version}-%{release}
 This package provides tools for building external (non-CPAN) dependencies
 for CPAN. It is mainly designed to be used at install time of a CPAN
 client, and work closely with Alien::Base which is used at run time.
+
+%package -n perl-Alien-Base
+Summary:        Base classes for Alien:: modules
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(DynaLoader)
+Requires:       perl(FFI::CheckLib)
+Requires:       perl(File::Find)
+Requires:       perl(JSON::PP)
+Requires:       perl(Path::Tiny) >= 0.077
+Requires:       perl(Storable)
+Requires:       perl(Text::ParseWords) >= 3.26
+# pkgconf-pkg-config for pkg-config tool executed by
+# Alien::Base::PkgConfig::pkg_config_command()
+Requires:       pkgconf-pkg-config
+# Alien::Base::PkgConfig moved from perl-Alien-Base-ModuleBuild
+Conflicts:      perl-Alien-Base-ModuleBuild < 1.00
+# Subpackaged from perl-Alien-Build-2.47-1
+Conflicts:      perl-Alien-Build < 2.47-2
+
+%description -n perl-Alien-Base
+Alien::Base comprises base classes to help in the construction of
+"Alien::" modules.
 
 %package Plugin-Decode-HTML
 Summary:        Alien::Build plugin to extract links from HTML
@@ -355,15 +377,31 @@ export HARNESS_OPTIONS=j$(perl -e 'if ($ARGV[0] =~ /.*-j([0-9][0-9]*).*/) {print
 make test
 
 %files
-%license LICENSE
-%doc Changes Changes.Alien-Base Changes.Alien-Base-Wrapper Changes.Test-Alien
-%doc example README SUPPORT
+%doc Changes.Alien-Base-Wrapper Changes.Test-Alien
+%doc example
 %{perl_vendorlib}/*
+%exclude %dir %{perl_vendorlib}/Alien
+%exclude %{perl_vendorlib}/Alien/Base.pm
+%exclude %dir %{perl_vendorlib}/Alien/Base
+%exclude %{perl_vendorlib}/Alien/Base/PkgConfig.pm
 %exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/HTML.pm
 %exclude %{perl_vendorlib}/Alien/Build/Plugin/Decode/Mojo.pm
 %{_mandir}/man3/*
+%exclude %{_mandir}/man3/Alien::Base.3pm.*
+%exclude %{_mandir}/man3/Alien::Base::PkgConfig.3pm.*
 %exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::HTML.3pm.*
 %exclude %{_mandir}/man3/Alien::Build::Plugin::Decode::Mojo.3pm.*
+
+%files -n perl-Alien-Base
+%license LICENSE
+%doc Changes Changes.Alien-Base
+%doc README SUPPORT
+%dir %{perl_vendorlib}/Alien
+%{perl_vendorlib}/Alien/Base.pm
+%dir %{perl_vendorlib}/Alien/Base
+%{perl_vendorlib}/Alien/Base/PkgConfig.pm
+%{_mandir}/man3/Alien::Base.3pm.*
+%{_mandir}/man3/Alien::Base::PkgConfig.3pm.*
 
 %files Plugin-Decode-HTML
 %{perl_vendorlib}/Alien/Build/Plugin/Decode/HTML.pm
@@ -378,6 +416,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Fri Mar 11 2022 Petr Pisar <ppisar@redhat.com> - 2.47-2
+- Move Alien::Base and Alien::Base::PkgConfig to perl-Alien-Base (bug #2063125)
+
 * Mon Mar 07 2022 Petr Pisar <ppisar@redhat.com> - 2.47-1
 - 2.47 bump
 
