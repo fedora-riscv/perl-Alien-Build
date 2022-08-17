@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.51
+Version:        2.59
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -19,6 +19,9 @@ Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
 Patch0:         Alien-Build-2.28-Remove-redundant-pkgconfig-implementations.patch
+# Support only the most commog SHA implementation,
+# the files are deleted in prep section
+Patch1:         Alien-Build-2.59-Remove-redundant-SHA-implementations.patch
 BuildArch:      noarch
 BuildRequires:  coreutils
 BuildRequires:  make
@@ -188,8 +191,8 @@ Provides:       perl-Test-Alien = %{version}-%{release}
 # Remove private redefinitions
 %global __provides_exclude %{?__provides_exclude:%{__provides_exclude}|}^perl\\(Alien::Build::rc\\)$
 # Remove private modules
-%global __provides_exclude %{__provides_exclude}|^perl\\(MyTest::.*\\)$
-%global __requires_exclude %{__requires_exclude}|^perl\\(Alien::Build::Plugin::RogerRamjet|Alien::Foo|Alien::libfoo1|Alien::libfoo2|MyTest::.*\\)$
+%global __provides_exclude %{__provides_exclude}|^perl\\(Alien::Build::Plugin::NesAdvantage::HelperTest|Alien::perlhelp|MyTest::.*\\)$
+%global __requires_exclude %{__requires_exclude}|^perl\\(Alien::Build::Plugin::RogerRamjet|Alien::Foo|Alien::libfoo1|Alien::libfoo2|Alien::perlhelp|MyTest::.*\\)$
 
 # Some tests, e.g. t/alien_build_plugin_extract_negotiate.t, compare a script file
 # content against an archived one. Do not rewrite their shebangs.
@@ -287,10 +290,16 @@ with "%{_libexecdir}/%{name}/test".
 %setup -q -n Alien-Build-%{version}
 # Remove redundant pkgconfig implementations, keep
 # Alien::Build::Plugin::PkgConfig::LibPkgConf,
-# MANIFEST is updated by Remove-redundant-pkgconfig-implementations.patch
+# MANIFEST is updated by Remove-redundant-pkgconfig-implementations.patch.
 %patch0 -p1
 rm lib/Alien/Build/Plugin/PkgConfig/{CommandLine,PP}.pm 
 rm t/alien_build_plugin_pkgconfig_{commandline,pp}.t
+# Remove redundant SHA digest imlementations, keep
+# Alien::Build::Plugin::Digest::SHA, MANIFEST is updated by
+# Alien-Build-2.59-Remove-redundant-SHA-implementations.patch.
+%patch1 -p1
+rm lib/Alien/Build/Plugin/Digest/SHAPP.pm
+rm t/alien_build_plugin_digest_shapp.t
 # Remove unused tests
 for F in \
     t/bin/ftpd \
@@ -360,7 +369,7 @@ unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
     ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
     ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
-    FOO1 FOO2 FOO3 VERBOSE WGET
+    FOO1 FOO2 FOO3 TEST_ALIEN_ALIENS_MISSING TEST_ALIEN_ALWAYS_KEEP VERBOSE WGET
 prove -I . -j "$(getconf _NPROCESSORS_ONLN)"
 popd
 rm -r "$DIR"
@@ -372,7 +381,7 @@ unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
     ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
     ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
-    FOO1 FOO2 FOO3 VERBOSE WGET
+    FOO1 FOO2 FOO3 TEST_ALIEN_ALIENS_MISSING TEST_ALIEN_ALWAYS_KEEP VERBOSE WGET
 export HARNESS_OPTIONS=j$(perl -e 'if ($ARGV[0] =~ /.*-j([0-9][0-9]*).*/) {print $1} else {print 1}' -- '%{?_smp_mflags}')
 make test
 
@@ -420,6 +429,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Tue Aug 16 2022 Petr Pisar <ppisar@redhat.com> - 2.59-1
+- 2.59 bump
+
 * Thu Aug 04 2022 Petr Pisar <ppisar@redhat.com> - 2.51-1
 - 2.51 bump
 
