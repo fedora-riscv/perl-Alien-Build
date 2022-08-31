@@ -1,4 +1,4 @@
-From 528765b7282f2fd6a542ba476d8564a7e0d0f73f Mon Sep 17 00:00:00 2001
+From 343c582db332d07f831420372ef8eab1eead0718 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Fri, 8 Sep 2017 11:31:02 +0200
 Subject: [PATCH] Remove redundant pkgconfig implementations
@@ -21,13 +21,13 @@ Signed-off-by: Petr Písař <ppisar@redhat.com>
  6 files changed, 11 insertions(+), 204 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index 71e1559..d1f6060 100644
+index 6f507b0..b9335ad 100644
 --- a/MANIFEST
 +++ b/MANIFEST
-@@ -229,11 +229,9 @@ lib/Alien/Build/Plugin/Fetch/LocalDir.pm
- lib/Alien/Build/Plugin/Fetch/NetFTP.pm
- lib/Alien/Build/Plugin/Fetch/Wget.pm
+@@ -243,11 +243,9 @@ lib/Alien/Build/Plugin/Fetch/Wget.pm
+ lib/Alien/Build/Plugin/Gather.pod
  lib/Alien/Build/Plugin/Gather/IsolateDynamic.pm
+ lib/Alien/Build/Plugin/PkgConfig.pod
 -lib/Alien/Build/Plugin/PkgConfig/CommandLine.pm
  lib/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm
  lib/Alien/Build/Plugin/PkgConfig/MakeStatic.pm
@@ -36,7 +36,7 @@ index 71e1559..d1f6060 100644
  lib/Alien/Build/Plugin/Prefer.pod
  lib/Alien/Build/Plugin/Prefer/BadVersion.pm
  lib/Alien/Build/Plugin/Prefer/GoodVersion.pm
-@@ -319,12 +317,10 @@ t/alien_build_plugin_fetch_netftp.t
+@@ -336,12 +334,10 @@ t/alien_build_plugin_fetch_netftp.t
  t/alien_build_plugin_fetch_wget.t
  t/alien_build_plugin_gather_isolatedynamic.t
  t/alien_build_plugin_meta.t
@@ -50,13 +50,13 @@ index 71e1559..d1f6060 100644
  t/alien_build_plugin_prefer_goodversion.t
  t/alien_build_plugin_prefer_sortversions.t
 diff --git a/Makefile.PL b/Makefile.PL
-index cde6585..242c1e9 100644
+index 27b442e..4c4c147 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
-@@ -87,11 +87,9 @@ my %WriteMakefileArgs = (
-     "lib/Alien/Build/Plugin/Fetch/NetFTP.pm"             => "\$(INST_LIB)/Alien/Build/Plugin/Fetch/NetFTP.pm",
-     "lib/Alien/Build/Plugin/Fetch/Wget.pm"               => "\$(INST_LIB)/Alien/Build/Plugin/Fetch/Wget.pm",
+@@ -95,11 +95,9 @@ my %WriteMakefileArgs = (
+     "lib/Alien/Build/Plugin/Gather.pod"                  => "\$(INST_LIB)/Alien/Build/Plugin/Gather.pod",
      "lib/Alien/Build/Plugin/Gather/IsolateDynamic.pm"    => "\$(INST_LIB)/Alien/Build/Plugin/Gather/IsolateDynamic.pm",
+     "lib/Alien/Build/Plugin/PkgConfig.pod"               => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig.pod",
 -    "lib/Alien/Build/Plugin/PkgConfig/CommandLine.pm"    => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/CommandLine.pm",
      "lib/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm"     => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/LibPkgConf.pm",
      "lib/Alien/Build/Plugin/PkgConfig/MakeStatic.pm"     => "\$(INST_LIB)/Alien/Build/Plugin/PkgConfig/MakeStatic.pm",
@@ -65,7 +65,7 @@ index cde6585..242c1e9 100644
      "lib/Alien/Build/Plugin/Prefer.pod"                  => "\$(INST_LIB)/Alien/Build/Plugin/Prefer.pod",
      "lib/Alien/Build/Plugin/Prefer/BadVersion.pm"        => "\$(INST_LIB)/Alien/Build/Plugin/Prefer/BadVersion.pm",
      "lib/Alien/Build/Plugin/Prefer/GoodVersion.pm"       => "\$(INST_LIB)/Alien/Build/Plugin/Prefer/GoodVersion.pm",
-@@ -204,4 +202,4 @@ sub requires { goto &runtime_requires }
+@@ -218,4 +216,4 @@ sub requires { goto &runtime_requires }
  sub runtime_requires {
    my ( $module, $version_or_range ) = @_;
    _add_prereq( PREREQ_PM => $module, $version_or_range );
@@ -73,7 +73,7 @@ index cde6585..242c1e9 100644
 \ No newline at end of file
 +}
 diff --git a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
-index 795dc63..35d50d0 100644
+index fd4cb62..de10c7c 100644
 --- a/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 +++ b/lib/Alien/Build/Plugin/PkgConfig/Negotiate.pm
 @@ -4,9 +4,7 @@ use strict;
@@ -124,7 +124,7 @@ index 795dc63..35d50d0 100644
  }
  
 diff --git a/t/01_use.t b/t/01_use.t
-index 90073a5..d06da60 100644
+index 0275da2..46875d0 100644
 --- a/t/01_use.t
 +++ b/t/01_use.t
 @@ -46,11 +46,9 @@ require_ok 'Alien::Build::Plugin::Fetch::LocalDir';
@@ -139,7 +139,7 @@ index 90073a5..d06da60 100644
  require_ok 'Alien::Build::Plugin::Prefer::BadVersion';
  require_ok 'Alien::Build::Plugin::Prefer::GoodVersion';
  require_ok 'Alien::Build::Plugin::Prefer::SortVersions';
-@@ -112,11 +110,9 @@ ok -f 't/alien_build_plugin_fetch_localdir.t',                'test for Alien::B
+@@ -116,11 +114,9 @@ ok -f 't/alien_build_plugin_fetch_localdir.t',                'test for Alien::B
  ok -f 't/alien_build_plugin_fetch_netftp.t',                  'test for Alien::Build::Plugin::Fetch::NetFTP';
  ok -f 't/alien_build_plugin_fetch_wget.t',                    'test for Alien::Build::Plugin::Fetch::Wget';
  ok -f 't/alien_build_plugin_gather_isolatedynamic.t',         'test for Alien::Build::Plugin::Gather::IsolateDynamic';
@@ -165,10 +165,10 @@ index 1c2c71d..071a7b0 100644
      local $ENV{ALIEN_BUILD_PKG_CONFIG} = "PkgConfig::$name";
      subtest $ENV{ALIEN_BUILD_PKG_CONFIG} => sub {
 diff --git a/t/alien_build_plugin_pkgconfig_negotiate__pick.t b/t/alien_build_plugin_pkgconfig_negotiate__pick.t
-index ece374e..2026d51 100644
+index 9862014..54fb83d 100644
 --- a/t/alien_build_plugin_pkgconfig_negotiate__pick.t
 +++ b/t/alien_build_plugin_pkgconfig_negotiate__pick.t
-@@ -25,9 +25,10 @@ subtest 'LibPkgConf' => sub {
+@@ -27,9 +27,10 @@ subtest 'LibPkgConf' => sub {
  
        local $PkgConfig::LibPkgConf::VERSION = '0.01';
  
@@ -182,7 +182,7 @@ index ece374e..2026d51 100644
        );
  
      };
-@@ -40,9 +41,10 @@ subtest 'LibPkgConf' => sub {
+@@ -42,9 +43,10 @@ subtest 'LibPkgConf' => sub {
      # cannot be loaded for the rest of this .t file
      note scalar capture_merged { Devel::Hide->import(qw( PkgConfig::LibPkgConf )) };
  
@@ -196,7 +196,7 @@ index ece374e..2026d51 100644
      );
  
    };
-@@ -55,167 +57,5 @@ my $make_pkgconfig_libpkgconf_unavailable = mock 'Alien::Build::Plugin::PkgConfi
+@@ -57,167 +59,5 @@ my $make_pkgconfig_libpkgconf_unavailable = mock 'Alien::Build::Plugin::PkgConfi
    ],
  );
  
@@ -365,5 +365,5 @@ index ece374e..2026d51 100644
  done_testing;
  
 -- 
-2.25.4
+2.37.2
 

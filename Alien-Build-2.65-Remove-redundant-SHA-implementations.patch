@@ -1,4 +1,4 @@
-From d4b7cdb9e22f81fae2a3734a2898501528d2c74e Mon Sep 17 00:00:00 2001
+From c2106ae1cda2da737f3a4202fc68fe9b758b6ee1 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
 Date: Wed, 17 Aug 2022 10:18:36 +0200
 Subject: [PATCH] Remove redundant SHA implementations
@@ -18,14 +18,14 @@ Signed-off-by: Petr Písař <ppisar@redhat.com>
 ---
  MANIFEST                          | 2 --
  Makefile.PL                       | 1 -
- lib/Alien/Build/Plugin/Digest.pod | 2 --
- 3 files changed, 5 deletions(-)
+ lib/Alien/Build/Plugin/Digest.pod | 4 ----
+ 3 files changed, 7 deletions(-)
 
 diff --git a/MANIFEST b/MANIFEST
-index cff43e0..85977a0 100644
+index b9335ad..fc1eea9 100644
 --- a/MANIFEST
 +++ b/MANIFEST
-@@ -222,7 +222,6 @@ lib/Alien/Build/Plugin/Decode/Mojo.pm
+@@ -223,7 +223,6 @@ lib/Alien/Build/Plugin/Decode/Mojo.pm
  lib/Alien/Build/Plugin/Digest.pod
  lib/Alien/Build/Plugin/Digest/Negotiate.pm
  lib/Alien/Build/Plugin/Digest/SHA.pm
@@ -33,7 +33,7 @@ index cff43e0..85977a0 100644
  lib/Alien/Build/Plugin/Download.pod
  lib/Alien/Build/Plugin/Download/Negotiate.pm
  lib/Alien/Build/Plugin/Extract.pod
-@@ -312,7 +311,6 @@ t/alien_build_plugin_decode_html.t
+@@ -317,7 +316,6 @@ t/alien_build_plugin_decode_html.t
  t/alien_build_plugin_decode_mojo.t
  t/alien_build_plugin_digest_negotiate.t
  t/alien_build_plugin_digest_sha.t
@@ -42,10 +42,10 @@ index cff43e0..85977a0 100644
  t/alien_build_plugin_extract_archivetar.t
  t/alien_build_plugin_extract_archivezip.t
 diff --git a/Makefile.PL b/Makefile.PL
-index 3b9aa53..7931c53 100644
+index 4c4c147..42f773f 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
-@@ -73,7 +73,6 @@ my %WriteMakefileArgs = (
+@@ -75,7 +75,6 @@ my %WriteMakefileArgs = (
      "lib/Alien/Build/Plugin/Digest.pod"                  => "\$(INST_LIB)/Alien/Build/Plugin/Digest.pod",
      "lib/Alien/Build/Plugin/Digest/Negotiate.pm"         => "\$(INST_LIB)/Alien/Build/Plugin/Digest/Negotiate.pm",
      "lib/Alien/Build/Plugin/Digest/SHA.pm"               => "\$(INST_LIB)/Alien/Build/Plugin/Digest/SHA.pm",
@@ -54,14 +54,16 @@ index 3b9aa53..7931c53 100644
      "lib/Alien/Build/Plugin/Download/Negotiate.pm"       => "\$(INST_LIB)/Alien/Build/Plugin/Download/Negotiate.pm",
      "lib/Alien/Build/Plugin/Extract.pod"                 => "\$(INST_LIB)/Alien/Build/Plugin/Extract.pod",
 diff --git a/lib/Alien/Build/Plugin/Digest.pod b/lib/Alien/Build/Plugin/Digest.pod
-index 4f02619..389f099 100644
+index ef3b471..a1844f2 100644
 --- a/lib/Alien/Build/Plugin/Digest.pod
 +++ b/lib/Alien/Build/Plugin/Digest.pod
-@@ -37,8 +37,6 @@ L<Digest Negotiator plugin|Alien::Build::Plugin::Digest::Negotiator>.
- 
- =item L<Alien::Build::Plugin::Digest::SHA>
+@@ -42,10 +42,6 @@ Negotiate the most appropriate plugin to calculate digest.
+ Use the XS based L<Digest::SHA> for computing SHA digests.  This is the default since
+ L<Digest::SHA> comes with recent versions of Perl.
  
 -=item L<Alien::Build::Plugin::Digest::SHAPP>
+-
+-Use the pure-perl based L<Digest::SHA::PurePerl> for computing SHA digests.
 -
  =back
  

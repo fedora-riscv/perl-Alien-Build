@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.59
+Version:        2.65
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -18,10 +18,10 @@ URL:            https://metacpan.org/release/Alien-Build
 Source0:        https://cpan.metacpan.org/authors/id/P/PL/PLICEASE/Alien-Build-%{version}.tar.gz
 # Support only the most advanced pkgconfig implementation,
 # the files are deleted in prep section
-Patch0:         Alien-Build-2.28-Remove-redundant-pkgconfig-implementations.patch
+Patch0:         Alien-Build-2.65-Remove-redundant-pkgconfig-implementations.patch
 # Support only the most commog SHA implementation,
 # the files are deleted in prep section
-Patch1:         Alien-Build-2.59-Remove-redundant-SHA-implementations.patch
+Patch1:         Alien-Build-2.65-Remove-redundant-SHA-implementations.patch
 BuildArch:      noarch
 BuildRequires:  coreutils
 BuildRequires:  make
@@ -367,7 +367,8 @@ cp -a %{_libexecdir}/%{name}/* "$DIR"
 pushd "$DIR"
 unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
-    ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
+    ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG \
+    ALIEN_DOWNLOAD_RULE ALIEN_FORCE \
     ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
     FOO1 FOO2 FOO3 TEST_ALIEN_ALIENS_MISSING TEST_ALIEN_ALWAYS_KEEP VERBOSE WGET
 prove -I . -j "$(getconf _NPROCESSORS_ONLN)"
@@ -379,7 +380,8 @@ chmod +x %{buildroot}%{_libexecdir}/%{name}/test
 %check
 unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
-    ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG ALIEN_FORCE \
+    ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG \
+    ALIEN_DOWNLOAD_RULE ALIEN_FORCE \
     ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
     FOO1 FOO2 FOO3 TEST_ALIEN_ALIENS_MISSING TEST_ALIEN_ALWAYS_KEEP VERBOSE WGET
 export HARNESS_OPTIONS=j$(perl -e 'if ($ARGV[0] =~ /.*-j([0-9][0-9]*).*/) {print $1} else {print 1}' -- '%{?_smp_mflags}')
@@ -429,6 +431,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Wed Aug 31 2022 Petr Pisar <ppisar@redhat.com> - 2.65-1
+- 2.65 bump
+
 * Tue Aug 16 2022 Petr Pisar <ppisar@redhat.com> - 2.59-1
 - 2.59 bump
 
