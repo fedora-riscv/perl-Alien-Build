@@ -7,7 +7,7 @@
 %endif
 
 Name:           perl-Alien-Build
-Version:        2.65
+Version:        2.67
 Release:        1%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
@@ -117,12 +117,13 @@ BuildRequires:  perl(Alien::Base::ModuleBuild) >= 0.040
 %endif
 BuildRequires:  perl(Devel::Hide)
 BuildRequires:  perl(Env::ShellWords)
-# FFI::Platypus not packaged
-# HTTP::Tiny or curl
+# (HTTP::Tiny and Mozilla::CA) or curl
 BuildRequires:  perl(HTTP::Tiny) >= 0.044
 # Prefer Mojo::DOM with Mojolicious, URI, URI::Escape over Mojo::DOM58
 BuildRequires:  perl(Mojo::DOM)
 BuildRequires:  perl(Mojolicious) >= 7.00
+# (HTTP::Tiny and Mozilla::CA) or curl
+# Mozilla::CA not used
 # PkgConfig not packaged
 BuildRequires:  perl(Readonly) >= 1.60
 BuildRequires:  perl(Sort::Versions)
@@ -132,7 +133,6 @@ BuildRequires:  perl(URI::file)
 %endif
 # Alien::Build::Plugin::Build::Copy executes cp
 Requires:       coreutils
-Suggests:       curl
 # Alien::Base::Wrapper::cc() executes $Config{cc}.
 Requires:       gcc
 # make in the lib/Alien/Build/Plugin/Build/CMake.pm plugin
@@ -165,6 +165,10 @@ Recommends:     perl(FFI::Platypus) >= 0.12
 Requires:       perl(Capture::Tiny) >= 0.17
 Requires:       perl(File::BOM)
 Requires:       perl(File::Find)
+# (HTTP::Tiny and Mozilla::CA) or curl for Alien::Build::Plugin::Download::Negotiate
+Requires:       perl(HTTP::Tiny) >= 0.044
+# (HTTP::Tiny and Mozilla::CA) or curl for Alien::Build::Plugin::Download::Negotiate
+Requires:       perl(Mozilla::CA)
 Requires:       perl(Path::Tiny) >= 0.077
 # Alien::Build::Plugin::PkgConfig::Negotiate finds a pkgconfig implementation
 # in this order:
@@ -177,8 +181,7 @@ Requires:       perl(Storable)
 Requires:       perl(Test2::API) >= 1.302096
 Requires:       perl(Text::ParseWords) >= 3.26
 # YAML or Data::Dumper
-Suggests:       perl(YAML)
-Suggests:       wget
+Recommends:     perl(YAML)
 # Test-Alien merged into Alien-Build
 Obsoletes:      perl-Test-Alien < 0.15-13
 Provides:       perl-Test-Alien = %{version}-%{release}
@@ -271,11 +274,13 @@ Requires:       perl(Alien::Base::ModuleBuild) >= 0.040
 Requires:       perl(Devel::Hide)
 Requires:       perl(Env::ShellWords)
 # FFI::Platypus not packaged
-# HTTP::Tiny or curl
+# (HTTP::Tiny and Mozilla::CA) or curl
 Requires:       perl(HTTP::Tiny) >= 0.044
 # Prefer Mojo::DOM with Mojolicious, URI, URI::Escape over Mojo::DOM58
 Requires:       perl(Mojo::DOM)
 Requires:       perl(Mojolicious) >= 7.00
+# (HTTP::Tiny and Mozilla::CA) or curl
+# Mozilla::CA not used
 # PkgConfig not packaged
 Requires:       perl(Readonly) >= 1.60
 Requires:       perl(Sort::Versions)
@@ -369,7 +374,7 @@ unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
     ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG \
     ALIEN_DOWNLOAD_RULE ALIEN_FORCE \
-    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
+    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CONFIG_SITE CURL DESTDIR \
     FOO1 FOO2 FOO3 TEST_ALIEN_ALIENS_MISSING TEST_ALIEN_ALWAYS_KEEP VERBOSE WGET
 prove -I . -j "$(getconf _NPROCESSORS_ONLN)"
 popd
@@ -382,7 +387,7 @@ unset ACLOCAL_PATH ALIEN_BASE_WRAPPER_QUIET ALIEN_BUILD_LIVE_TEST \
     ALIEN_BUILD_LOG ALIEN_BUILD_PKG_CONFIG ALIEN_BUILD_POSTLOAD \
     ALIEN_BUILD_PRELOAD ALIEN_BUILD_RC ALIEN_BUILD_SITE_CONFIG \
     ALIEN_DOWNLOAD_RULE ALIEN_FORCE \
-    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CIPDIST CONFIG_SITE CURL DESTDIR \
+    ALIEN_INSTALL_NETWORK ALIEN_INSTALL_TYPE CONFIG_SITE CURL DESTDIR \
     FOO1 FOO2 FOO3 TEST_ALIEN_ALIENS_MISSING TEST_ALIEN_ALWAYS_KEEP VERBOSE WGET
 export HARNESS_OPTIONS=j$(perl -e 'if ($ARGV[0] =~ /.*-j([0-9][0-9]*).*/) {print $1} else {print 1}' -- '%{?_smp_mflags}')
 make test
@@ -431,6 +436,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Mon Sep 05 2022 Petr Pisar <ppisar@redhat.com> - 2.67-1
+- 2.67 bump
+
 * Wed Aug 31 2022 Petr Pisar <ppisar@redhat.com> - 2.65-1
 - 2.65 bump
 
