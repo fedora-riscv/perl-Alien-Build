@@ -1,3 +1,4 @@
+%global perl_bootstrap 1
 # Run optional test
 %{bcond_without perl_Alien_Build_enables_optional_test}
 # Exhibit FFI::Platypus in Test::Alien
@@ -8,7 +9,7 @@
 
 Name:           perl-Alien-Build
 Version:        2.74
-Release:        2%{?dist}
+Release:        2~bootstrap%{?dist}
 Summary:        Build external dependencies for use in CPAN
 # lib/Alien/Build/Plugin/Test/Mock.pm contains Base64-encoded files for tests
 # (a bash script, C source file, a gzipped tar archive, Mach-O 64-bit x86_64
@@ -436,6 +437,9 @@ make test
 %{_libexecdir}/%{name}
 
 %changelog
+* Fri Dec 30 2022 Liu Yang <Yang.Liu.sn@gmail.com> -2.74-2~bootstrap
+- Bootstrap for perl 5.36 riscv64.
+
 * Wed Dec 07 2022 Petr Pisar <ppisar@redhat.com> - 2.74-2
 - Remove private provides from tests
 
